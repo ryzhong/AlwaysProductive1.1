@@ -7,9 +7,12 @@ export default class HomeScreen extends React.Component {
             <View style={style.container}>
                 <Text>Home Screen</Text>
             </View>
+
         )
     }
 }
+
+//testing merge
 
 const style = StyleSheet.create({
     container: {
