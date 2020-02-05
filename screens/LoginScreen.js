@@ -1,8 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, LayoutAnimation } from 'react-native'
 import * as firebase from 'firebase'
 
 export default class LoginScreen extends React.Component {
+    static navigationOptions = {
+        header: null
+    };
     state = {
         email: "",
         password: "",
@@ -18,8 +21,20 @@ export default class LoginScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar barStyle="light-content"></StatusBar>
+
+                <Image 
+                    source={require('../assets/loginTop.png')} 
+                    style={{height: 220, width: 270, marginTop: 50, alignSelf: "center"}}
+                ></Image>
+
+                <Image 
+                    source={require("../assets/loginBottom.png")}
+                    style={{position: "absolute", height: 220, width: 420, top: 150}}
+                ></Image>
+
                 <Text style={styles.greeting}>
-                    {`Hello again.\nWelcome back.`}
+                    {`ALWAYS PRODUCTIVE!`}
                 </Text>
 
                 <View style={styles.errorMessage}>
@@ -57,7 +72,7 @@ export default class LoginScreen extends React.Component {
                     <Text style={{ color: "#414959", fontSize: 13 }}>
                         New to this App?
                     </Text>
-                    
+
                     <Text
                         style={{ alignSelf: "center", fontWeight: "500", color: "#E9446A" }}
                         onPress={() => this.props.navigation.navigate("Register")}
