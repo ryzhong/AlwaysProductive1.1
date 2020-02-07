@@ -1,7 +1,13 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar,  Platform, UIManager } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import * as firebase from 'firebase'
+
+if (Platform.OS === 'android') {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }
 
 export default class RegisterScreen extends React.Component {
     static navigationOptions = {
@@ -28,6 +34,8 @@ export default class RegisterScreen extends React.Component {
     }
 
     render() {
+        // LayoutAnimation.easeInEaseOut();
+
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content"></StatusBar>
