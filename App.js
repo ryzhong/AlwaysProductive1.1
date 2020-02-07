@@ -17,7 +17,8 @@ var firebaseConfig = {
   appId: "1:478161939233:web:644a4b2c5afb39ef4a6c60"
 };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
+!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
 const AppStack = createStackNavigator({
   Home: HomeScreen
