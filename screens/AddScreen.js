@@ -11,7 +11,7 @@ export default class AddScreen extends React.Component {
                         <Ionicons name="md-arrow-back" size={24} color="#D8D9DB"></Ionicons>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Text style={{ fontWeight: "700" }}>Post</Text>
+                        <Text style={{ fontWeight: "700" }}>Add Task </Text>
                     </TouchableOpacity>
                 </View>
 
