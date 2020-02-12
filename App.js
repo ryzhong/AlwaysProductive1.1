@@ -22,57 +22,78 @@ var firebaseConfig = FirebaseKeys;
 // firebase.initializeApp(firebaseConfig);
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
-const AppTabNavigator = createBottomTabNavigator(
+const AppContainer = createStackNavigator(
   {
-    Home: {
-      screen: HomeScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => <Ionicons name="ios-home" size={24} color={tintColor} />
+    default: createBottomTabNavigator(
+      {
+        Home: {
+          screen: HomeScreen,
+          navigationOptions: {
+            tabBarIcon: ({tintColor}) => <Ionicons name="ios-home" size={24} color={tintColor} />
+          }
+        },
+        Goals: {
+          screen: GoalsScreen,
+          navigationOptions: {
+            tabBarIcon: ({tintColor}) => <Ionicons name="ios-paper" size={24} color={tintColor} />
+          }
+        },
+        Add: {
+          screen: AddScreen,
+          navigationOptions: {
+            tabBarIcon: ({tintColor}) => (
+              <Ionicons 
+                name="ios-add-circle" 
+                size= {36} 
+                color= "#E9446A" 
+                style={{
+                  shadowColor: "#E9446A",
+                  shadowOffset: { width: 0, height: 0, shadowRadius: 10, shadowOpacity: 0.3 }
+                }}
+                />
+            )
+          }
+        },
+        Alarm: {
+          screen: AlarmScreen,
+          navigationOptions: {
+            tabBarIcon: ({tintColor}) => <Ionicons name="ios-alarm" size={24} color={tintColor} />
+          }
+        },
+        Profile: {
+          screen: ProfileScreen,
+          navigationOptions: {
+            tabBarIcon: ({tintColor}) => <Ionicons name="ios-person" size={24} color={tintColor} />
+          }
+        },
+      },
+      {
+        defaultNavigationOptions: {
+          tabBarOnPress: ({navigation, defaultHandler}) => {
+            if (navigation.state.key === "Add") {
+              navigation.navigate("addModal")
+            } else {
+              defaultHandler()
+            }
+          }
+        },
+        tabBarOptions: {
+          activeTintColor: "#161F3D",
+          inactiveColor: "#B8BBC4",
+          showLabel: false
+        }
       }
-    },
-    Goals: {
-      screen: GoalsScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => <Ionicons name="ios-paper" size={24} color={tintColor} />
-      }
-    },
-    Add: {
-      screen: AddScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => (
-          <Ionicons 
-            name="ios-add-circle" 
-            size= {36} 
-            color= "#E9446A" 
-            style={{
-              shadowColor: "#E9446A",
-              shadowOffset: { width: 0, height: 0, shadowRadius: 10, shadowOpacity: 0.3 }
-            }}
-            />
-        )
-      }
-    },
-    Alarm: {
-      screen: AlarmScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => <Ionicons name="ios-alarm" size={24} color={tintColor} />
-      }
-    },
-    Profile: {
-      screen: ProfileScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => <Ionicons name="ios-person" size={24} color={tintColor} />
-      }
-    },
+    ),
+    addModal: {
+      screen: AddScreen
+    }
   },
   {
-    tabBarOptions: {
-      activeTintColor: "#161F3D",
-      inactiveColor: "#B8BBC4",
-      showLabel: false
-    }
+    mode: "modal",
+    headerMode: "none"
   }
 )
+
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
@@ -83,7 +104,7 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       Loading: LoadingScreen,
-      App: AppTabNavigator,
+      App: AppContainer,
       Auth: AuthStack
     },
     {
