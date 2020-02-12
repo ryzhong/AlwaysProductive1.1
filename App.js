@@ -1,4 +1,5 @@
 import React from 'react'
+import FirebaseKeys from "./config"
 import {createAppContainer, createSwitchNavigator} from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
@@ -15,15 +16,8 @@ import ProfileScreen from './screens/ProfileScreen'
 
 import * as firebase from 'firebase';
 
-var firebaseConfig = {
-  apiKey: "AIzaSyBhEMxR3qGSEN6u-MxaUjKbxAM6W6udUW8",
-  authDomain: "alwaysproductive-df87c.firebaseapp.com",
-  databaseURL: "https://alwaysproductive-df87c.firebaseio.com",
-  projectId: "alwaysproductive-df87c",
-  storageBucket: "alwaysproductive-df87c.appspot.com",
-  messagingSenderId: "478161939233",
-  appId: "1:478161939233:web:644a4b2c5afb39ef4a6c60"
-};
+var firebaseConfig = FirebaseKeys;
+
 // Initialize Firebase
 // firebase.initializeApp(firebaseConfig);
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
