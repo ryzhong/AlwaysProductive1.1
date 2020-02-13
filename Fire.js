@@ -10,26 +10,31 @@ class Fire {
         return new Promise((res, rej) => {
             let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp)
             docRef.get()
-                .then( data => 
-                    data.data().tasks
-                )
+                .then(data => {
+                    if(data.data() === undefined) {
+                        return [];
+                    }
+                    return data.data().tasks
+
+                })
                 .then(tasks => {
                     tasks.push(text);
                     return tasks;
                 })
-                .then( tasks => {
+                .then(tasks => {
                     docRef
-                    .set({
-                        tasks,
-                        uid: this.uid,
-                        date: this.timestamp
-                    })
-                    .then(ref => {
-                        res(ref)
-                    })
-                    .catch(error => {
-                        rej(error)
-                    })
+                        .set({
+                            tasks,
+                            uid: this.uid,
+                            date: this.timestamp
+                        })
+                })
+
+                .then(ref => {
+                    res(ref)
+                })
+                .catch(error => {
+                    rej(error)
                 })
         })
 
