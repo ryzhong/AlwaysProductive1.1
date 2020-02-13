@@ -1,4 +1,5 @@
 import React from 'react'
+import './fixYellowTimer.js';
 import FirebaseKeys from "./config"
 import {createAppContainer, createSwitchNavigator} from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack'
