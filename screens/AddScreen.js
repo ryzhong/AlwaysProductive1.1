@@ -1,16 +1,39 @@
 import React from 'react'
 import {View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
+import Constants from 'expo-constants'
+import * as Permissions from 'expo-permissions'
+import Fire from '../Fire'
+
+const firebase = require("firebase");
+// Required for side-effects
+require("firebase/firestore");
 
 export default class AddScreen extends React.Component {
+    state = {
+        text: ""
+    }
+
+    handleAddTask = () => {
+        // alert('handling')
+        Fire.shared.addTask({ text: this.state.text.trim() })
+        .then(ref => {
+            this.setState({ text: "" });
+            this.props.navigation.goBack();
+        })
+        .catch(error => {
+            alert(error)
+        })
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
                         <Ionicons name="md-arrow-back" size={24} color="#D8D9DB"></Ionicons>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.handleAddTask()}>
                         <Text style={{ fontWeight: "700" }}>Add Task </Text>
                     </TouchableOpacity>
                 </View>
@@ -23,7 +46,12 @@ export default class AddScreen extends React.Component {
                         numberOfLines={4}
                         style={{ flex : 1 }}
                         placeholder="Add a task for today"
+                        onChangeText={text => this.setState({text})}
+                        value={this.state.text}
                     ></TextInput>
+                </View>
+                <View>
+                    <Text>Testing</Text>
                 </View>
             </SafeAreaView>
         )
