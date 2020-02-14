@@ -20,11 +20,14 @@ export default class HomeScreen extends React.Component {
 
         this.updateTasks();
         
-        let docRef = Fire.shared.firestore.collection('users').doc(Fire.shared.uid).collection('date').doc(Fire.shared.timestamp)
-        docRef.onSnapshot((snapshot) => {
-            if(snapshot.data() !== undefined) {
-                this.setState({ tasks: snapshot.data().tasks }, alert('updated'))
-            }
+        let docRef = Fire.shared.firestore.collection('users').doc(Fire.shared.uid).collection('date').doc(Fire.shared.timestamp).collection('tasks')
+        docRef.onSnapshot((doc) => {
+            // console.log(doc, 'lol')
+            // if(snapshot !== undefined) {
+            //     console.log('AYYYYYYY')
+            //     this.setState({ tasks:  }, alert('updated'))
+            // }
+            this.updateTasks();
         })
         this.setState({ email, displayName });
     }
@@ -32,7 +35,7 @@ export default class HomeScreen extends React.Component {
 
     updateTasks() {
         Fire.shared.getTasks()
-            .then(tasks => this.setState({ tasks } ))
+            .then(tasks => {this.setState({ tasks })})
             .catch(error => {
                 alert(error)
             })
@@ -41,7 +44,7 @@ export default class HomeScreen extends React.Component {
 
     renderTasks = task => {
         let color = "ios-checkmark-circle-outline";
-        if(task.completed) {
+        if(task[1]) {
             color = 'ios-checkmark-circle'
         }
         return (
@@ -50,11 +53,14 @@ export default class HomeScreen extends React.Component {
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <View>
-                            <Text style={styles.task}>{task.challenge}</Text>
+                            <Text style={styles.task}>{task[0]}</Text>
                         </View>
                     </View>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={ () => 
+                    // alert(task[2])
+                    Fire.shared.toggleCompleted(task[2], task[1])
+                    }>
                     <Ionicons style={{ marginLeft: 10 }} name={color} size={28} color="#50FF03" />
                 </TouchableOpacity>
                 <TouchableOpacity>
