@@ -25,6 +25,7 @@ export default class HomeScreen extends React.Component {
     renderTasks = task => {
         return (
             <View style={styles.feedItem}>
+                <Ionicons name="ios-aperture" size={24} color="#DDFB16" />
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <View>
@@ -32,6 +33,12 @@ export default class HomeScreen extends React.Component {
                         </View>
                     </View>
                 </View>
+                <TouchableOpacity>
+                    <Ionicons style={{marginLeft: 10}} name="ios-checkmark-circle-outline" size={28} color="#50FF03" />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Ionicons style={{marginLeft: 25}} name="ios-close-circle-outline" size={28} color="#F10707" />
+                </TouchableOpacity>
             </View>
         )
     }
@@ -88,6 +95,13 @@ const styles = StyleSheet.create({
         padding: 8,
         flexDirection: "row",
         marginVertical: 8
+    },
+    task: {
+        textTransform: "capitalize",
+        marginTop: 3,
+        marginLeft: 12,
+        fontSize: 14,
+        color: "#838899"
     }
 
 })
