@@ -1,43 +1,93 @@
 import React from 'react'
-import {View, Text, StyleSheet, TouchableOpacity, LayoutAnimation} from 'react-native'
-import * as firebase from 'firebase'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, SectionList } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+
+var tasks = [
+    "cook" , "clean", "gym"
+]
 
 export default class HomeScreen extends React.Component {
-    state = {
-        email: "",
-        displayName: ""
-    }
+    // state = {
+    //     email: "",
+    //     displayName: ""
+    // }
 
-    componentDidMount() {
-        const {email, displayName} = firebase.auth().currentUser;
+    // componentDidMount() {
+    //     const {email, displayName} = firebase.auth().currentUser;
 
-        this.setState( {email, displayName});
-    }
+    //     this.setState( {email, displayName});
+    // }
 
-    signOutUser = () => {
-        firebase.auth().signOut();
+    // signOutUser = () => {
+    //     firebase.auth().signOut();
+    // }
+
+    renderTasks = task => {
+        return (
+            <View style={styles.feedItem}>
+                <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <View>
+                            <Text style={styles.task}>{task}</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        )
     }
 
     render() {
-        // LayoutAnimation.easeInEaseOut();
-        
         return (
-            <View style={style.container}>
-                <Text>Hi {this.state.displayName}!</Text>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.headerTitle}>Challenges You Accepted </Text>
+                </View>
 
-                <TouchableOpacity style={{marginTop: 32}} onPress={this.signOutUser}>
-                    <Text>Logout</Text>
-                </TouchableOpacity>
+                <FlatList
+                    style={styles.feed}
+                    data={tasks} 
+                    renderItem={({item}) => this.renderTasks(item)} 
+                    keyExtractor={(item, index) => index} 
+                    showsVerticalScrollIndicator={false}
+                />
+                
             </View>
-
         )
     }
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "#EFECF4"
+    },
+    header: {
+        paddingTop: 64,
+        paddingBottom: 16,
+        backgroundColor: "#FFF",
+        alignItems: "center",
         justifyContent: "center",
-        alignItems: "center"
+        borderBottomWidth: 1,
+        borderBottomColor: "#EBECF4",
+        shadowColor: "#454D65",
+        shadowOffset: { height: 5 },
+        shadowRadius: 15,
+        shadowOpacity: 0.2,
+        zIndex: 10
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: "500"
+    },
+    feed: {
+        marginHorizontal: 16
+    },
+    feedItem: {
+        backgroundColor: "#FFF",
+        borderRadius: 5,
+        padding: 8,
+        flexDirection: "row",
+        marginVertical: 8
     }
+
 })
