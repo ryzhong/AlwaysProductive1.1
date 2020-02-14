@@ -1,43 +1,64 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, SectionList } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+const firebase = require("firebase");
+// Required for side-effects
+require("firebase/firestore");
 
-var tasks = [
-    "cook" , "clean", "gym"
-]
+import Fire from '../Fire'
+
 
 export default class HomeScreen extends React.Component {
-    // state = {
-    //     email: "",
-    //     displayName: ""
-    // }
+    state = {
+        email: "",
+        displayName: "",
+        tasks: []
+    }
 
-    // componentDidMount() {
-    //     const {email, displayName} = firebase.auth().currentUser;
+    componentDidMount() {
+        const { email, displayName } = firebase.auth().currentUser;
 
-    //     this.setState( {email, displayName});
-    // }
+        this.updateTasks();
+        
+        let docRef = Fire.shared.firestore.collection('users').doc(Fire.shared.uid).collection('date').doc(Fire.shared.timestamp)
+        docRef.onSnapshot((snapshot) => {
+            if(snapshot.data() !== undefined) {
+                this.setState({ tasks: snapshot.data().tasks }, alert('updated'))
+            }
+        })
+        this.setState({ email, displayName });
+    }
 
-    // signOutUser = () => {
-    //     firebase.auth().signOut();
-    // }
+
+    updateTasks() {
+        Fire.shared.getTasks()
+            .then(tasks => this.setState({ tasks } ))
+            .catch(error => {
+                alert(error)
+            })
+    }
+
 
     renderTasks = task => {
+        let color = "ios-checkmark-circle-outline";
+        if(task.completed) {
+            color = 'ios-checkmark-circle'
+        }
         return (
             <View style={styles.feedItem}>
                 <Ionicons name="ios-aperture" size={24} color="#DDFB16" />
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <View>
-                            <Text style={styles.task}>{task}</Text>
+                            <Text style={styles.task}>{task.challenge}</Text>
                         </View>
                     </View>
                 </View>
                 <TouchableOpacity>
-                    <Ionicons style={{marginLeft: 10}} name="ios-checkmark-circle-outline" size={28} color="#50FF03" />
+                    <Ionicons style={{ marginLeft: 10 }} name={color} size={28} color="#50FF03" />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Ionicons style={{marginLeft: 25}} name="ios-close-circle-outline" size={28} color="#F10707" />
+                    <Ionicons style={{ marginLeft: 25 }} name="ios-close-circle-outline" size={28} color="#F10707" />
                 </TouchableOpacity>
             </View>
         )
@@ -52,12 +73,12 @@ export default class HomeScreen extends React.Component {
 
                 <FlatList
                     style={styles.feed}
-                    data={tasks} 
-                    renderItem={({item}) => this.renderTasks(item)} 
-                    keyExtractor={(item, index) => index} 
+                    data={this.state.tasks}
+                    renderItem={({ item }) => this.renderTasks(item)}
+                    keyExtractor={(item, index) => item}
                     showsVerticalScrollIndicator={false}
                 />
-                
+
             </View>
         )
     }
