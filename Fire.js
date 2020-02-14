@@ -8,25 +8,48 @@ class Fire {
 
     addTask = async ({ text }) => {
         return new Promise((res, rej) => {
-            let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp)
-            docRef.get()
-                .then(data => {
-                    if (data.data() === undefined) {
-                        return [];
-                    }
-                    return data.data().tasks
+            let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks')
+            docRef
+                // .get()
+                // .then((snapshot) => {
+                //     let data = {}
+                //     snapshot.forEach((doc) => {
+                //         data.push(doc.data());
+                //     })
+                //     alert(data)
+                //     return data
+                // })
+                // .then(data => {
+                //     if (data.length === 0) {
+                //         return {};
+                //     }
+                //     return data
+                // })
+                // .then(tasks => {
+                //     tasks[text] = { challenge: text, completed: false }
+                //     return tasks;
+                // // })
+                // .then(tasks => {
+                // docRef
+                .add(
+                    { challenge: text, completed: false }
+                )
+                // .then( (docRef) => 
+                //     docRef.get()
+                //     .then((data) => {
+                //         data.data()["id"] = docRef.id;
+                //         return data;
+                //     })
+                // )
+                // .then(doc => alert(doc))
+                // })
+                .then( (ref) => {
+                    docRef.doc(ref.id).update({
+                        id: ref.id
+                    })
+                    console.log(docRef)
+                    return docRef
                 })
-                .then(tasks => {
-                    tasks.push({challenge: text, completed: true});
-                    return tasks;
-                })
-                .then(tasks => {
-                    docRef
-                        .set({
-                            tasks
-                        })
-                })
-
                 .then(ref => {
                     res(ref)
                 })
@@ -39,13 +62,21 @@ class Fire {
 
     getTasks = async () => {
         return new Promise((res, rej) => {
-            let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp);
+            let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks');
             docRef.get()
-                .then(data => {
-                    if (data.data() === undefined) {
-                        return [];
-                    }
-                    return data.data().tasks
+                // .then(data => {
+                //     if (data.data() === undefined) {
+                //         return [];
+                //     }
+                //     return data.data().tasks
+                // })
+                .then((snapshot) => {
+                    let data = [];
+                    snapshot.forEach((doc) => {
+                        data.push([doc.data().challenge, doc.data().completed, doc.data().id]);
+                        // return doc.data();
+                    })
+                    return data;
                 })
                 .then(ref => {
                     res(ref)
@@ -57,19 +88,23 @@ class Fire {
         })
     }
 
-    toggleCompleted() {
-        let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp);
-        return docRef.update({
-            
-        })
+    toggleCompleted = async (docID, complete) => {
+        let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks').doc(docID);
+        // console.log(docRef.get())
+        // return new Promise((res, rej) => {
+           return docRef.update({
+                completed: !complete
+            })
+
+        // })
     }
 
     get firestore() {
-            return firebase.firestore()
-        }
+        return firebase.firestore()
+    }
 
     get uid() {
-            return(firebase.auth().currentUser || {}).uid
+        return (firebase.auth().currentUser || {}).uid
     }
 
     get timestamp() {
