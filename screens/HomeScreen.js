@@ -15,27 +15,30 @@ export default class HomeScreen extends React.Component {
         tasks: []
     }
 
+    unsubscribe = Fire.shared.firestore.collection('users').doc(Fire.shared.uid).collection('date').doc(Fire.shared.timestamp).collection('tasks')
+        .onSnapshot((doc) => {
+            this.updateTasks();
+        })
+
+
     componentDidMount() {
         const { email, displayName } = firebase.auth().currentUser;
 
         this.updateTasks();
-        
-        let docRef = Fire.shared.firestore.collection('users').doc(Fire.shared.uid).collection('date').doc(Fire.shared.timestamp).collection('tasks')
-        docRef.onSnapshot((doc) => {
-            // console.log(doc, 'lol')
-            // if(snapshot !== undefined) {
-            //     console.log('AYYYYYYY')
-            //     this.setState({ tasks:  }, alert('updated'))
-            // }
-            this.updateTasks();
-        })
+
         this.setState({ email, displayName });
+    }
+
+    componentWillUnmount() {
+        if (this.unsubscribe) {
+            this.unsubscribe()
+        }
     }
 
 
     updateTasks() {
         Fire.shared.getTasks()
-            .then(tasks => {this.setState({ tasks })})
+            .then(tasks => { this.setState({ tasks }) })
             .catch(error => {
                 alert(error)
             })
@@ -44,7 +47,7 @@ export default class HomeScreen extends React.Component {
 
     renderTasks = task => {
         let color = "ios-checkmark-circle-outline";
-        if(task[1]) {
+        if (task[1]) {
             color = 'ios-checkmark-circle'
         }
         return (
@@ -57,10 +60,10 @@ export default class HomeScreen extends React.Component {
                         </View>
                     </View>
                 </View>
-                <TouchableOpacity onPress={ () => 
+                <TouchableOpacity onPress={() =>
                     // alert(task[2])
                     Fire.shared.toggleCompleted(task[2], task[1])
-                    }>
+                }>
                     <Ionicons style={{ marginLeft: 10 }} name={color} size={28} color="#50FF03" />
                 </TouchableOpacity>
                 <TouchableOpacity>
