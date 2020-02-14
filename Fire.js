@@ -99,6 +99,12 @@ class Fire {
         // })
     }
 
+    deleteTask = async (docID) => {
+        let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks').doc(docID);
+        docRef.delete()
+        .catch(error => console.log(error))
+    }
+
     get firestore() {
         return firebase.firestore()
     }

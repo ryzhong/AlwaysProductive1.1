@@ -60,13 +60,10 @@ export default class HomeScreen extends React.Component {
                         </View>
                     </View>
                 </View>
-                <TouchableOpacity onPress={() =>
-                    // alert(task[2])
-                    Fire.shared.toggleCompleted(task[2], task[1])
-                }>
+                <TouchableOpacity onPress={() => Fire.shared.toggleCompleted(task[2], task[1])}>
                     <Ionicons style={{ marginLeft: 10 }} name={color} size={28} color="#50FF03" />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => Fire.shared.deleteTask(task[2])}>
                     <Ionicons style={{ marginLeft: 25 }} name="ios-close-circle-outline" size={28} color="#F10707" />
                 </TouchableOpacity>
             </View>
