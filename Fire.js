@@ -1,6 +1,7 @@
 import FirebaseKeys from "./config"
 import firebase from 'firebase'
 
+
 class Fire {
     constructor() {
         !firebase.apps.length ? firebase.initializeApp(FirebaseKeys) : firebase.app();
