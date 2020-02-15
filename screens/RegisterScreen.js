@@ -2,6 +2,8 @@ import React from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, Platform, UIManager } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import * as firebase from 'firebase'
+import UserPermissions from '../utilities/UserPermissions'
+import * as ImagePicker from 'expo-image-picker'
 
 // if (Platform.OS === 'android') {
 //     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -25,7 +27,17 @@ export default class RegisterScreen extends React.Component {
     }
 
     handlePickAvatar= async () => {
+        UserPermissions.getCameraPermission();
 
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4,3]
+        })
+
+        if(!result.cancelled) {
+            this.setState({user: { ...this.state.user, avatar: result.uri} })
+        }
     }
 
     handleSignUp = () => {
