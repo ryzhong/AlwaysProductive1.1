@@ -7,6 +7,31 @@ class Fire {
         !firebase.apps.length ? firebase.initializeApp(FirebaseKeys) : firebase.app();
     }
 
+    uploadPhotoAsync = async (uri, fileName) => {
+        return new Promise( async (res, rej) => {
+            const response = await fetch(uri);
+            const file = await response.blob();
+
+            let uploadTask = firebase
+                .storage()
+                .ref('images/' + fileName)
+                .put(file)
+            
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {},
+                error => {
+                    rej(error);
+                },
+                async () => {
+                    const url = await uploadTask.snapshot.ref.getDownloadURL();
+                    res(url);
+                }
+            )  
+
+        })
+    }
+
     addTask = async ({ text }) => {
         return new Promise((res, rej) => {
             let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks')
