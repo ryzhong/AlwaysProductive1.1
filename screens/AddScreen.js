@@ -45,7 +45,7 @@ export default class AddScreen extends React.Component {
                         multiline={true}
                         numberOfLines={4}
                         style={{ flex : 1 }}
-                        placeholder="Add a task for today"
+                        placeholder="Add a task for challenge"
                         onChangeText={text => this.setState({text})}
                         value={this.state.text}
                     ></TextInput>
