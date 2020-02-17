@@ -73,7 +73,6 @@ class Fire {
                     docRef.doc(ref.id).update({
                         id: ref.id
                     })
-                    console.log(docRef)
                     return docRef
                 })
                 .then(ref => {
