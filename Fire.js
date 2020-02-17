@@ -154,12 +154,13 @@ class Fire {
         }
     }
 
-    getUserInfo = async  => {
+    getUserInfo = async () => {
         return new Promise((res, rej) => {
-            let docRef = this.firestore.collections('users').doc(this.uid)
+            let docRef = this.firestore.collection('users').doc(this.uid)
             docRef.get()
-            .then(data => {
-                return {name: data.name, email: data.email, avatar: data.avatar}
+            .then(data => data.data())
+            .then(info => {
+                return {name: info.name, email: info.email, avatar: info.avatar}
             })
             .then(info => {
                 res(info)
