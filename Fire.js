@@ -154,6 +154,20 @@ class Fire {
         }
     }
 
+    getUserInfo = async  => {
+        return new Promise((res, rej) => {
+            let docRef = this.firestore.collections('users').doc(this.uid)
+            docRef.get()
+            .then(data => {
+                return {name: data.name, email: data.email, avatar: data.avatar}
+            })
+            .then(info => {
+                res(info)
+            })
+            .catch(error => rej(error))
+        })
+    }
+
     get firestore() {
         return firebase.firestore()
     }
