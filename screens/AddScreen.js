@@ -19,7 +19,7 @@ export default class AddScreen extends React.Component {
         Fire.shared.addTask({ text: this.state.text.trim() })
         .then(ref => {
             this.setState({ text: "" });
-            this.props.navigation.goBack();
+            this.props.navigation.navigate('Home');
         })
         .catch(error => {
             alert(error)
