@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'reac
 import firebase from 'firebase'
 import { Ionicons } from '@expo/vector-icons'
 import Fire from '../Fire'
+import UserPermissions from '../utilities/UserPermissions'
+import * as ImagePicker from 'expo-image-picker'
 
 export default class ProfileScreen extends React.Component {
     state = {
@@ -21,6 +23,24 @@ export default class ProfileScreen extends React.Component {
             })
     }
 
+    handlePickAvatar = async () => {
+        UserPermissions.getCameraPermission();
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4,3]
+        })
+
+        if(!result.cancelled) {
+            this.setState({user: { ...this.state.user, avatar: result.uri} })
+        }
+    }
+
+    handleUpdate = (info) => {
+        
+    }
+
     signOutUser = () => {
         firebase.auth().signOut();
     }
@@ -35,7 +55,7 @@ export default class ProfileScreen extends React.Component {
 
                 <View style={{ position: "absolute", top: 120, alignItems: "center", width: "100%" }}>
                     <Text>Profile</Text>
-                    <TouchableOpacity style={styles.avatarPlaceholder} onPress={() => console.log(this.state.user.avatar)}>
+                    <TouchableOpacity style={styles.avatarPlaceholder} onPress={this.handlePickAvatar}>
                         <Image source={{ uri: this.state.user.avatar }} style={styles.avatar} />
                         <Ionicons name="ios-add" size={40} color="#FFF" style={{ marginTop: 6, marginLeft: 2 }}></Ionicons>
                     </TouchableOpacity>
@@ -70,7 +90,7 @@ export default class ProfileScreen extends React.Component {
                 </View>
 
                 <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-                    <Text style={styles.save}>Save Changes </Text>
+                    <Text style={styles.save}>Update </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ marginTop: 150, alignItems: "center" }} onPress={this.signOutUser}>
