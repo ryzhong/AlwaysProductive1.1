@@ -35,7 +35,7 @@ export default class ProfileScreen extends React.Component {
                     <Text>Profile Screen</Text>
                     <TouchableOpacity style={styles.avatarPlaceholder} onPress={() => console.log(this.state.user.avatar)}>
                         <Image source={{ uri: this.state.user.avatar }} style={styles.avatar} />
-                        <Ionicons name="ios-add" size={40} color="#FFF" style={{ marginTop: 6, marginleft: 2 }}></Ionicons>
+                        <Ionicons name="ios-add" size={40} color="#FFF" style={{ marginTop: 6, marginLeft: 2 }}></Ionicons>
                     </TouchableOpacity>
                     <View style={styles.info}>
                         <Text style={styles.moreInfo}>Name: {this.state.user.name}</Text>
