@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native'
 import firebase from 'firebase'
 import { Ionicons } from '@expo/vector-icons'
 import Fire from '../Fire'
@@ -10,7 +10,8 @@ export default class ProfileScreen extends React.Component {
             name: null,
             email: null,
             avatar: null
-        }
+        },
+        errorMessage: null
     }
 
     componentDidMount() {
@@ -27,24 +28,54 @@ export default class ProfileScreen extends React.Component {
         return (
 
             <View style={styles.container}>
-                <TouchableOpacity style={styles.back} onPress={ () => this.props.navigation.goBack()}>
+                <TouchableOpacity style={styles.back} onPress={() => this.props.navigation.goBack()}>
                     <Ionicons name="ios-arrow-round-back" size={32}></Ionicons>
                 </TouchableOpacity>
 
+
                 <View style={{ position: "absolute", top: 120, alignItems: "center", width: "100%" }}>
-                    <Text>Profile Screen</Text>
+                    <Text>Profile</Text>
                     <TouchableOpacity style={styles.avatarPlaceholder} onPress={() => console.log(this.state.user.avatar)}>
                         <Image source={{ uri: this.state.user.avatar }} style={styles.avatar} />
                         <Ionicons name="ios-add" size={40} color="#FFF" style={{ marginTop: 6, marginLeft: 2 }}></Ionicons>
                     </TouchableOpacity>
-                    <View style={styles.info}>
-                        <Text style={styles.moreInfo}>Name: {this.state.user.name}</Text>
-                        <Text style={styles.moreInfo}>Email: {this.state.user.email}</Text>
-                        <TouchableOpacity style={{ marginTop: 32 }} onPress={this.signOutUser}>
-                            <Text>Logout</Text>
-                        </TouchableOpacity>
+                </View>
+
+                <View style={styles.errorMessage}>
+                    {this.state.errorMessage && <Text style={styles.error}>{this.state.errorMessage}</Text>}
+                </View>
+
+                <View style={styles.form}>
+                    <View style={{ marginTop: 250 }}>
+                        <Text style={styles.inputTitle}>Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            autoCapitalize="none"
+                            onChangeText={name => this.setState({ user: { ...this.state.user, name } })}
+                            value={this.state.user.name}
+                        ></TextInput>
                     </View>
                 </View>
+
+                <View style={styles.form}>
+                    <View>
+                        <Text style={styles.inputTitle}>Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            autoCapitalize="none"
+                            onChangeText={email => this.setState({ user: { ...this.state.user, email } })}
+                            value={this.state.user.email}
+                        ></TextInput>
+                    </View>
+                </View>
+
+                <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+                    <Text style={styles.save}>Save Changes </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ marginTop: 150, alignItems: "center" }} onPress={this.signOutUser}>
+                    <Text>Logout</Text>
+                </TouchableOpacity>
             </View>
 
         )
@@ -54,6 +85,34 @@ export default class ProfileScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    errorMessage: {
+        height: 72,
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: 30
+    },
+    error: {
+        color: "#E9446A",
+        fontSize: 13,
+        fontWeight: "600",
+        textAlign: "center"
+    },
+    form: {
+        marginBottom: 24,
+        marginHorizontal: 30
+    },
+    inputTitle: {
+        color: "#8A8F9E",
+        fontSize: 10,
+        textTransform: "uppercase"
+    },
+    input: {
+        borderBottomColor: "#8A8F9E",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        fontSize: 15,
+        color: "#161F3D"
     },
     back: {
         position: "absolute",
@@ -85,11 +144,23 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     info: {
-        marginTop: 40,
+        marginTop: 10,
         justifyContent: "center",
         alignItems: "center"
     },
     moreInfo: {
         marginTop: 15
+    },
+    button: {
+        marginHorizontal: 30,
+        backgroundColor: "#E9446A",
+        borderRadius: 4,
+        height: 52,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    save: {
+        color: "#FFF",
+        fontWeight: "500"
     }
 })
