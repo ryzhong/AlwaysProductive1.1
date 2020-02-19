@@ -168,6 +168,23 @@ class Fire {
         })
     }
 
+    updateUserInfo = async (info) => {
+        return new Promise((res, rej) => {
+            let docRef = this.firestore.collection('users').doc(this.uid)
+            docRef.update({
+                name: info.name,
+                email: info.email,
+                avatar: info.avatar
+            })
+            .then(ref => {
+                res(ref)
+            })
+            .catch( err => {
+                rej(err)
+            })
+        })
+    }
+
     get firestore() {
         return firebase.firestore()
     }

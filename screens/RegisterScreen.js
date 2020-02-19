@@ -27,7 +27,7 @@ export default class RegisterScreen extends React.Component {
         errorMessage: null
     }
 
-    handlePickAvatar= async () => {
+    handlePickAvatar = async () => {
         UserPermissions.getCameraPermission();
 
         let result = await ImagePicker.launchImageLibraryAsync({
