@@ -37,8 +37,9 @@ export default class ProfileScreen extends React.Component {
         }
     }
 
-    handleUpdate = (info) => {
-        
+    handleUpdate = () => {
+        Fire.shared.updateUserInfo(this.state.user)
+        alert("Your profile has been updated!")
     }
 
     signOutUser = () => {
@@ -89,7 +90,7 @@ export default class ProfileScreen extends React.Component {
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+                <TouchableOpacity style={styles.button} onPress={this.handleUpdate}>
                     <Text style={styles.save}>Update </Text>
                 </TouchableOpacity>
 
