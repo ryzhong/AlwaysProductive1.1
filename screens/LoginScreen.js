@@ -26,12 +26,12 @@ export default class LoginScreen extends React.Component {
 
                 <Image 
                     source={require('../assets/loginTop.png')} 
-                    style={{height: 220, width: 270, marginTop: 50, alignSelf: "center"}}
+                    style={{height: 200, width: 270, marginTop: 50, alignSelf: "center"}}
                 ></Image>
 
                 <Image 
                     source={require("../assets/loginBottom.png")}
-                    style={{position: "absolute", height: 220, width: 420, top: 150}}
+                    style={{position: "absolute", height: 180, width: 420, top: 150}}
                 ></Image>
 
                 <Text style={styles.greeting}>
@@ -53,7 +53,7 @@ export default class LoginScreen extends React.Component {
                         ></TextInput>
                     </View>
 
-                    <View style={{ marginTop: 32 }}>
+                    <View style={{ marginTop: 15 }}>
                         <Text style={styles.inputTitle}>Password</Text>
                         <TextInput
                             style={styles.input}
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     greeting: {
-        marginTop: 32,
+        marginTop: 5,
         fontSize: 18,
         fontWeight: "400",
         textAlign: "center"
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     form: {
-        marginBottom: 50,
+        marginBottom: 35,
         marginHorizontal: 30
     },
     inputTitle: {
