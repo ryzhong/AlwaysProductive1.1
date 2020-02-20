@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, statusBar, StatusBar, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, statusBar, StatusBar, Dimensions, Keyboard } from 'react-native'
 
 const screen = Dimensions.get('window')
 
@@ -42,6 +42,7 @@ export default class AlarmScreen extends React.Component {
     setRemainingSecs() {
         let remainingSecs = (Number(this.state.mins) * 60) + Number(this.state.secs)
         this.setState({  ...this.state, remainingSecs })
+        Keyboard.dismiss();
     }
 
     updateRemainingSecs(time) {
