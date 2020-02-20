@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     },
     setTimer: {
         flexDirection: "row",
-        marginTop: 40,
+        marginTop: 30,
         marginLeft: screen.width / 4,
         marginRight: screen.width / 4,
     },
@@ -189,18 +189,18 @@ const styles = StyleSheet.create({
         borderColor: "#000000",
         marginLeft: 10,
         marginRight: 10,
-        fontSize: 80,
+        fontSize: 100,
         textAlign: "right",
         padding: 3,
     },
     colons: {
-        fontSize: 80
+        fontSize: 100
     },
     buttons: {
         // flexDirection: "row"
     },
     button: {
-        marginTop: 50,
+        marginTop: 20,
         width: screen.width / 2,
         height: screen.height / 4,
         borderWidth: 10,
