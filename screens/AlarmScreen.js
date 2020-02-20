@@ -1,85 +1,100 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, statusBar, StatusBar, Dimensions } from 'react-native'
+
+const screen = Dimensions.get('window')
 
 export default class AlarmScreen extends React.Component {
     state = {
-        time: {
-            hr: null,
-            min: null,
-            sec: null
-        }
+        remainingSecs: null,
+        started: false
     }
 
     onChanged(time, num) {
         console.log(time, num)
         num = num.replace(/[^0-9]/g, '')
-        if(time === "hr") {
-            this.setState({hr: num.replace(/[^0-9]/g, '')})
+        if (time === "min") {
+            this.setState({ min: num })
         }
-        if(time === "min") {
-            this.setState({min: num.replace(/[^0-9]/g, '')})
+        if (time === "sec") {
+            this.setState({ sec: num })
         }
-        if(time === "sec") {
-            this.setState({sec: num.replace(/[^0-9]/g, '')})
+    }
+
+    formatNum(num) {
+        return `0${num}`.slice(-2);
+    }
+
+    getTimeLeft(time) {
+        if(time === null) {
+            return {mins: '00', secs: '00'};
+        }
+        const mins = this.formatNum(Math.floor(time / 60));
+        const secs = this.formatNum(time - (mins * 60));
+        return { mins, secs }
+    }
+
+    setRemainingSecs(remainingSecs) {
+        this.setState({ remainingSecs })
+    }
+
+    toggle() {
+        this.setState({ started: !this.state.started })
+    }
+
+    reset() {
+        this.setState({ remainingSecs : 0 })
+    }
+
+    startTimer() {
+        let interval = null;
+        if (this.state.started) {
+            interval = setInterval(() => {
+                this.setRemainingSecs(this.state.remainingSecs + 1)
+            }, 1000)
+        } else if (this.state.started && this.remainingSecs !== 0) {
+            clearInterval(interval)
         }
     }
 
     render() {
+        let { mins, secs } = this.getTimeLeft(this.state.remainingSecs);
+
         return (
             <View style={styles.container}>
-                <Text>Alarm Screen</Text>
+                <StatusBar barStyle="light-content"></StatusBar>
                 <View style={styles.setTimer}>
-                    {/* <Text>HERE</Text> */}
                     <TextInput
                         style={styles.timeInput}
                         keyboardType='numeric'
-                        maxLength = {2}
-                        onChangeText = {(num)=> this.onChanged("hr", num)}
-                        value={this.state.time.hr}
+                        maxLength={2}
+                        onChangeText={(num) => this.onChanged("min", num)}
+                        value={mins}
                     >
-                        {this.state.time.hr}
                     </TextInput>
                     <Text style={styles.colons}>:</Text>
-                    <TextInput 
+                    <TextInput
                         style={styles.timeInput}
                         keyboardType='numeric'
-                        maxLength = {2}
-                        onChangeText = {(num)=> this.onChanged("min", num)}
-                        value={this.state.time.min}
+                        maxLength={2}
+                        onChangeText={(num) => this.onChanged("sec", num)}
+                        value={secs}
                     >
-                        {this.state.time.hr}
                     </TextInput>
-                    <Text style={styles.colons}>:</Text>
-                    <TextInput 
-                        style={styles.timeInput}
-                        keyboardType='numeric'
-                        maxLength = {2}
-                        onChangeText = {(num)=> this.onChanged("sec", num)}
-                        value={this.state.time.sec}
-                    >
-                        {this.state.time.hr}
-                    </TextInput>
+                    {/* <Text>{mins}:{secs}</Text> */}
                 </View>
                 <View style={styles.timerLabel}>
-                    <Text style={{ marginLeft: 77 }}>H</Text>
+                    <Text style={styles.timerText}>M</Text>
 
-                    <Text style={{ marginLeft: 77 }}>M</Text>
-
-                    <Text style={{ marginLeft: 77 }}>S</Text>
+                    <Text style={styles.timerText}>S</Text>
                 </View>
                 <View style={styles.buttons}>
                     <TouchableOpacity style={styles.button}>
-                        <Text>
-                            Start
+                        <Text style={styles.buttonText} onPress={() => this.toggle()}>
+                            {this.state.started ? "Pause" : "Start"}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text>
-                            Pause
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text>
+                    <TouchableOpacity style={styles.button} onPress={() => reset}>
+                        <Text style={styles.buttonText}>
                             Reset
                         </Text>
                     </TouchableOpacity>
@@ -91,10 +106,9 @@ export default class AlarmScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        top: 200,
+        top: 80,
         flex: 1,
-        alignItems: "center",
-        // justifyContent: "center"
+        alignItems: "center"
     },
     setTimer: {
         flexDirection: "row",
@@ -103,36 +117,38 @@ const styles = StyleSheet.create({
     timerLabel: {
         flexDirection: "row",
         marginTop: 1,
-        right: 39
+        justifyContent: "space-between"
+    },
+    timerText: {
+        marginLeft: screen.width / 6,
+        marginRight: screen.width / 6
     },
     timeInput: {
-        height: 60,
-        width: 60,
         borderColor: "#000000",
-        borderWidth: 1,
         marginLeft: 10,
         marginRight: 10,
-        fontSize: 45,
+        fontSize: 80,
         textAlign: "right",
         padding: 3
     },
     colons: {
-        fontSize: 40
+        fontSize: 80
     },
     buttons: {
-        flexDirection: "row"
+        // flexDirection: "row"
     },
     button: {
         marginTop: 50,
-        marginLeft: 30,
-        marginRight: 30,
-        width: 50,
-        height: 30,
-        borderWidth: 1,
+        width: screen.width / 2,
+        height: screen.height / 4,
+        borderWidth: 10,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E9446A",
-        borderRadius: 4,
+        borderRadius: screen.width / 2,
         marginHorizontal: 30,
+    },
+    buttonText: {
+        fontSize: 45
     }
 })
