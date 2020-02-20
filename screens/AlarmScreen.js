@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, statusBar, StatusBar, Dimensions, Keyboard } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, StatusBar, Dimensions, Keyboard } from 'react-native'
 
 const screen = Dimensions.get('window')
 
@@ -106,9 +106,8 @@ export default class AlarmScreen extends React.Component {
                     <TouchableOpacity onPress={() => this.setRemainingSecs() }>
                         <Text style={styles.setButton}>Set Timer</Text>
                     </TouchableOpacity>
-                    {/* <Text>{mins}:{secs}</Text> */}
                 </View>
-                <View style={styles.setTimer}>
+                <View style={styles.clock}>
                     <TextInput
                         style={styles.timeInput}
                         keyboardType='numeric'
@@ -158,7 +157,13 @@ const styles = StyleSheet.create({
     },
     setTimer: {
         flexDirection: "row",
-        marginTop: 40,
+        marginTop: 30,
+        marginLeft: screen.width / 4,
+        marginRight: screen.width / 4,
+    },
+    clock: {
+        flexDirection: "row",
+        marginTop: 10,
         marginLeft: screen.width / 4,
         marginRight: screen.width / 4,
     },
@@ -168,8 +173,8 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     timerText: {
-        marginLeft: screen.width / 6,
-        marginRight: screen.width / 6
+        marginLeft: screen.width / 5,
+        marginRight: screen.width / 5
     },
     asktimeInput: {
         height: 30,
@@ -189,18 +194,18 @@ const styles = StyleSheet.create({
         borderColor: "#000000",
         marginLeft: 10,
         marginRight: 10,
-        fontSize: 80,
+        fontSize: 120,
         textAlign: "right",
         padding: 3,
     },
     colons: {
-        fontSize: 80
+        fontSize: 120
     },
     buttons: {
         // flexDirection: "row"
     },
     button: {
-        marginTop: 50,
+        marginTop: 15,
         width: screen.width / 2,
         height: screen.height / 4,
         borderWidth: 10,
@@ -208,7 +213,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#E9446A",
         borderRadius: screen.width / 2,
-        marginHorizontal: 30,
+        // marginHorizontal: 30,
     },
     buttonText: {
         fontSize: 45
