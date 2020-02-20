@@ -1,13 +1,15 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, statusBar, StatusBar, Dimensions } from 'react-native'
+
+const screen = Dimensions.get('window')
 
 export default class AlarmScreen extends React.Component {
     state = {
         time: {
-            hr: null,
             min: null,
             sec: null
-        }
+        },
+        started: false
     }
 
     onChanged(time, num) {
@@ -27,19 +29,9 @@ export default class AlarmScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar barStyle="light-content"></StatusBar>
                 <Text>Alarm Screen</Text>
                 <View style={styles.setTimer}>
-                    {/* <Text>HERE</Text> */}
-                    <TextInput
-                        style={styles.timeInput}
-                        keyboardType='numeric'
-                        maxLength = {2}
-                        onChangeText = {(num)=> this.onChanged("hr", num)}
-                        value={this.state.time.hr}
-                    >
-                        {this.state.time.hr}
-                    </TextInput>
-                    <Text style={styles.colons}>:</Text>
                     <TextInput 
                         style={styles.timeInput}
                         keyboardType='numeric'
@@ -61,25 +53,23 @@ export default class AlarmScreen extends React.Component {
                     </TextInput>
                 </View>
                 <View style={styles.timerLabel}>
-                    <Text style={{ marginLeft: 77 }}>H</Text>
-
                     <Text style={{ marginLeft: 77 }}>M</Text>
 
                     <Text style={{ marginLeft: 77 }}>S</Text>
                 </View>
                 <View style={styles.buttons}>
                     <TouchableOpacity style={styles.button}>
-                        <Text>
+                        <Text style={styles.buttonText}>
                             Start
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button}>
-                        <Text>
+                        <Text style={styles.buttonText}>
                             Pause
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button}>
-                        <Text>
+                        <Text style={styles.buttonText}>
                             Reset
                         </Text>
                     </TouchableOpacity>
@@ -120,19 +110,22 @@ const styles = StyleSheet.create({
         fontSize: 40
     },
     buttons: {
-        flexDirection: "row"
+        // flexDirection: "row"
     },
     button: {
         marginTop: 50,
-        marginLeft: 30,
-        marginRight: 30,
-        width: 50,
-        height: 30,
-        borderWidth: 1,
+        // marginLeft: 30,
+        // marginRight: 30,
+        // width: 50,
+        // height: 30,
+        borderWidth: 10,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E9446A",
         borderRadius: 4,
         marginHorizontal: 30,
+    },
+    buttonText: {
+        fontSize: 45
     }
 })
