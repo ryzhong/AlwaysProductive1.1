@@ -6,8 +6,6 @@ const screen = Dimensions.get('window')
 export default class AlarmScreen extends React.Component {
     state = {
         remainingSecs: null,
-        mins: null,
-        secs: null,
         started: false
     }
 
@@ -22,9 +20,16 @@ export default class AlarmScreen extends React.Component {
         }
     }
 
+    formatNum(num) {
+        return `0${num}`.slice(-2);
+    }
+
     getTimeLeft(time) {
-        const mins = Math.floor(time / 60);
-        const secs = time - (mins * 60);
+        if(time === null) {
+            return {mins: '00', secs: '00'};
+        }
+        const mins = this.formatNum(Math.floor(time / 60));
+        const secs = this.formatNum(time - (mins * 60));
         return { mins, secs }
     }
 
@@ -37,7 +42,7 @@ export default class AlarmScreen extends React.Component {
     }
 
     reset() {
-        this.setState({ min: 0 })
+        this.setState({ remainingSecs : 0 })
     }
 
     startTimer() {
@@ -53,7 +58,6 @@ export default class AlarmScreen extends React.Component {
 
     render() {
         let { mins, secs } = this.getTimeLeft(this.state.remainingSecs);
-
 
         return (
             <View style={styles.container}>
@@ -76,11 +80,12 @@ export default class AlarmScreen extends React.Component {
                         value={secs}
                     >
                     </TextInput>
+                    {/* <Text>{mins}:{secs}</Text> */}
                 </View>
                 <View style={styles.timerLabel}>
-                    <Text style={{ marginLeft: 77 }}>M</Text>
+                    <Text style={styles.timerText}>M</Text>
 
-                    <Text style={{ marginLeft: 77 }}>S</Text>
+                    <Text style={styles.timerText}>S</Text>
                 </View>
                 <View style={styles.buttons}>
                     <TouchableOpacity style={styles.button}>
@@ -88,7 +93,7 @@ export default class AlarmScreen extends React.Component {
                             {this.state.started ? "Pause" : "Start"}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={() => reset}>
                         <Text style={styles.buttonText}>
                             Reset
                         </Text>
@@ -103,8 +108,7 @@ const styles = StyleSheet.create({
     container: {
         top: 80,
         flex: 1,
-        alignItems: "center",
-        // justifyContent: "center"
+        alignItems: "center"
     },
     setTimer: {
         flexDirection: "row",
@@ -113,29 +117,28 @@ const styles = StyleSheet.create({
     timerLabel: {
         flexDirection: "row",
         marginTop: 1,
-        right: 39
+        justifyContent: "space-between"
+    },
+    timerText: {
+        marginLeft: screen.width / 6,
+        marginRight: screen.width / 6
     },
     timeInput: {
-        height: 60,
-        width: 60,
         borderColor: "#000000",
-        borderWidth: 1,
         marginLeft: 10,
         marginRight: 10,
-        fontSize: 45,
+        fontSize: 80,
         textAlign: "right",
         padding: 3
     },
     colons: {
-        fontSize: 40
+        fontSize: 80
     },
     buttons: {
         // flexDirection: "row"
     },
     button: {
         marginTop: 50,
-        // marginLeft: 30,
-        // marginRight: 30,
         width: screen.width / 2,
         height: screen.height / 4,
         borderWidth: 10,
