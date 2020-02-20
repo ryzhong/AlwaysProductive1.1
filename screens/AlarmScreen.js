@@ -5,51 +5,76 @@ const screen = Dimensions.get('window')
 
 export default class AlarmScreen extends React.Component {
     state = {
-        time: {
-            min: null,
-            sec: null
-        },
+        remainingSecs: null,
+        mins: null,
+        secs: null,
         started: false
     }
 
     onChanged(time, num) {
         console.log(time, num)
         num = num.replace(/[^0-9]/g, '')
-        if(time === "hr") {
-            this.setState({hr: num.replace(/[^0-9]/g, '')})
+        if (time === "min") {
+            this.setState({ min: num })
         }
-        if(time === "min") {
-            this.setState({min: num.replace(/[^0-9]/g, '')})
+        if (time === "sec") {
+            this.setState({ sec: num })
         }
-        if(time === "sec") {
-            this.setState({sec: num.replace(/[^0-9]/g, '')})
+    }
+
+    getTimeLeft(time) {
+        const mins = Math.floor(time / 60);
+        const secs = time - (mins * 60);
+        return { mins, secs }
+    }
+
+    setRemainingSecs(remainingSecs) {
+        this.setState({ remainingSecs })
+    }
+
+    toggle() {
+        this.setState({ started: !this.state.started })
+    }
+
+    reset() {
+        this.setState({ min: 0 })
+    }
+
+    startTimer() {
+        let interval = null;
+        if (this.state.started) {
+            interval = setInterval(() => {
+                this.setRemainingSecs(this.state.remainingSecs + 1)
+            }, 1000)
+        } else if (this.state.started && this.remainingSecs !== 0) {
+            clearInterval(interval)
         }
     }
 
     render() {
+        let { mins, secs } = this.getTimeLeft(this.state.remainingSecs);
+
+
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content"></StatusBar>
-                <Text>Alarm Screen</Text>
                 <View style={styles.setTimer}>
-                    <TextInput 
+                    <TextInput
                         style={styles.timeInput}
                         keyboardType='numeric'
-                        maxLength = {2}
-                        onChangeText = {(num)=> this.onChanged("min", num)}
-                        value={this.state.time.min}
+                        maxLength={2}
+                        onChangeText={(num) => this.onChanged("min", num)}
+                        value={mins}
                     >
-                        {this.state.time.hr}
                     </TextInput>
                     <Text style={styles.colons}>:</Text>
-                    <TextInput 
+                    <TextInput
                         style={styles.timeInput}
                         keyboardType='numeric'
-                        maxLength = {2}
-                        onChangeText = {(num)=> this.onChanged("sec", num)}
-                        value={this.state.time.sec}
+                        maxLength={2}
+                        onChangeText={(num) => this.onChanged("sec", num)}
+                        value={secs}
                     >
-                        {this.state.time.hr}
                     </TextInput>
                 </View>
                 <View style={styles.timerLabel}>
@@ -59,13 +84,8 @@ export default class AlarmScreen extends React.Component {
                 </View>
                 <View style={styles.buttons}>
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>
-                            Start
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>
-                            Pause
+                        <Text style={styles.buttonText} onPress={() => this.toggle()}>
+                            {this.state.started ? "Pause" : "Start"}
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button}>
@@ -81,7 +101,7 @@ export default class AlarmScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        top: 200,
+        top: 80,
         flex: 1,
         alignItems: "center",
         // justifyContent: "center"
@@ -116,13 +136,13 @@ const styles = StyleSheet.create({
         marginTop: 50,
         // marginLeft: 30,
         // marginRight: 30,
-        // width: 50,
-        // height: 30,
+        width: screen.width / 2,
+        height: screen.height / 4,
         borderWidth: 10,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E9446A",
-        borderRadius: 4,
+        borderRadius: screen.width / 2,
         marginHorizontal: 30,
     },
     buttonText: {
