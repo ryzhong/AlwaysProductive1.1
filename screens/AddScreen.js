@@ -41,7 +41,7 @@ export default class AddScreen extends React.Component {
                 <View style={styles.inputContainer}>
                     <Image source={require("../assets/ryanShoo.jpg")} style={styles.avatar}></Image>
                     <TextInput 
-                        autoFocus={true}
+                        // autoFocus={true}
                         multiline={true}
                         numberOfLines={4}
                         style={{ flex : 1 }}
