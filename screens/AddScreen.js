@@ -55,7 +55,6 @@ export default class AddScreen extends React.Component {
     }
 
     renderFavs = (favItem) => {
-        console.log(favItem)
         return (
             <TouchableOpacity style={styles.favFeedItem} onPress={() => this.handleAddFavToTask(favItem)}>
                 <Ionicons name="md-heart" size={20} color="#FF0000"></Ionicons>
