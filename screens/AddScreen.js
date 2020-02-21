@@ -23,9 +23,9 @@ export default class AddScreen extends React.Component {
             })
     }
 
-    handleAddTask = () => {
+    handleAddTask = (task) => {
         // alert('handling')
-        Fire.shared.addTask({ text: this.state.text.trim() })
+        Fire.shared.addTask({ text: task.trim() })
             .then(ref => {
                 this.setState({ text: "" });
                 this.props.navigation.navigate('Home');
@@ -33,6 +33,10 @@ export default class AddScreen extends React.Component {
             .catch(error => {
                 alert(error)
             })
+    }
+
+    handleAddFav = () => {
+
     }
 
     renderFavs = (favItem) => {
@@ -81,7 +85,7 @@ export default class AddScreen extends React.Component {
                         <Ionicons name="md-heart" size={18} color="#FF0000"></Ionicons>   Add to Favorites
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.handleAddTask()}>
+                    <TouchableOpacity onPress={() => this.handleAddTask(this.state.text)}>
                         <Text style={styles.buttonText}>
                         <Ionicons name="md-checkmark" size={18} color="#77FF05"></Ionicons>   Add Task 
                         </Text>
