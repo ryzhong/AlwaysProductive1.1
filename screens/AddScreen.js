@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, StatusBar } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, StatusBar, Keyboard } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
@@ -42,16 +42,22 @@ export default class AddScreen extends React.Component {
         Fire.shared.addFav(favs, text)
             .then(ref => {
                 this.setState({ text: "" });
+
+                Keyboard.dismiss();
             })
             .catch(error => {
                 alert(error)
             })
     }
 
+    handleAddFavToTask = (favItem) => {
+        this.handleAddTask(favItem)
+    }
+
     renderFavs = (favItem) => {
         console.log(favItem)
         return (
-            <View style={styles.favFeedItem}>
+            <TouchableOpacity style={styles.favFeedItem} onPress={() => this.handleAddFavToTask(favItem)}>
                 <Ionicons name="md-heart" size={20} color="#FF0000"></Ionicons>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <View>
@@ -59,7 +65,7 @@ export default class AddScreen extends React.Component {
                         <Text style={styles.favText}>{favItem}</Text>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 
@@ -182,6 +188,7 @@ const styles = StyleSheet.create({
         marginVertical: 8
     },
     favText: {
+        textTransform: "capitalize",
         marginTop: 3,
         marginLeft: 12,
         fontSize: 14,
