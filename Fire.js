@@ -194,7 +194,7 @@ class Fire {
             docRef.get()
                 .then(data => data.data())
                 .then(info => {
-                    return { name: info.name, email: info.email, avatar: info.avatar }
+                    return { name: info.name, email: info.email, avatar: info.avatar, favs: info.favs }
                 })
                 .then(info => {
                     res(info)

@@ -12,14 +12,14 @@ require("firebase/firestore");
 export default class AddScreen extends React.Component {
     state = {
         text: "",
-        favs: ["Make Bed", "Eat Breakfast"],
-        avatar: "../assets/ryanShoo.jpg"
+        favs: [],
+        avatar: "../assets/ryanShoo.jpg",
     }
 
     componentDidMount() {
         Fire.shared.getUserInfo()
             .then(user => {
-                this.setState({ avatar: user.avatar })
+                this.setState({ avatar: user.avatar, favs: user.favs })
             })
             .catch(error => {
                 alert(error)
@@ -38,11 +38,10 @@ export default class AddScreen extends React.Component {
             })
     }
 
-    handleAddFav = (text) => {
-        Fire.shared.addFav(text)
+    handleAddFav = (favs, text) => {
+        Fire.shared.addFav(favs, text)
             .then(ref => {
                 this.setState({ text: "" });
-                this.props.navigation.navigate('Home');
             })
             .catch(error => {
                 alert(error)
@@ -90,7 +89,7 @@ export default class AddScreen extends React.Component {
                     ></TextInput>
                 </View>
                 <View style={styles.buttons}>
-                    <TouchableOpacity onPress={() => this.handleAddFav()}>
+                    <TouchableOpacity onPress={() => this.handleAddFav(this.state.favs, this.state.text)}>
                         <Text style={styles.buttonText}>
                             <Ionicons name="md-heart" size={18} color="#FF0000"></Ionicons>   Add to Favorites
                         </Text>
