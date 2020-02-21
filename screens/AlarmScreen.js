@@ -63,7 +63,9 @@ export default class AlarmScreen extends React.Component {
     }
 
     reset() {
-        this.setRemainingSecs();
+        if(!this.state.started) {
+            this.setRemainingSecs();
+        }
     }
 
     startTimer() {
