@@ -8,7 +8,7 @@ class Fire {
     }
 
     uploadPhotoAsync = async (uri, fileName) => {
-        return new Promise( async (res, rej) => {
+        return new Promise(async (res, rej) => {
             const response = await fetch(uri);
             const file = await response.blob();
 
@@ -16,10 +16,10 @@ class Fire {
                 .storage()
                 .ref('images/' + fileName)
                 .put(file)
-            
+
             uploadTask.on(
                 'state_changed',
-                (snapshot) => {},
+                (snapshot) => { },
                 error => {
                     rej(error);
                 },
@@ -27,7 +27,7 @@ class Fire {
                     const url = await uploadTask.snapshot.ref.getDownloadURL();
                     res(url);
                 }
-            )  
+            )
 
         })
     }
@@ -69,7 +69,7 @@ class Fire {
                 // )
                 // .then(doc => alert(doc))
                 // })
-                .then( (ref) => {
+                .then((ref) => {
                     docRef.doc(ref.id).update({
                         id: ref.id
                     })
@@ -116,28 +116,39 @@ class Fire {
     deleteTask = async (docID) => {
         let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks').doc(docID);
         docRef.delete()
-        .catch(error => console.log(error))
+            .catch(error => console.log(error))
     }
 
-    addFav = async ({text}) => {
+    addFav = async ({ text }) => {
         return new Promise((res, rej) => {
             let docRef = this.firestore.collection('users').doc(this.uid)
             docRef
-            .add({favs: text})
-            .then(ref => res(ref))
-            .catch(err => err)
+                .add({ favs: text })
+                .then(ref => res(ref))
+                .catch(err => rej(err))
         })
     }
 
-
+    getFavs = async () => {
+        return new Promise((res, rej) => {
+            let docRef = this.firestore.collection('users').doc(this.uid)
+            docRef
+                .get()
+                .then(data => {
+                    data.data().favs
+                })
+                .then(favs => res(favs))
+                .catch(err => rej(err))
+        })
+    }
 
     toggleCompleted = async (docID, complete) => {
         let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks').doc(docID);
         // console.log(docRef.get())
         // return new Promise((res, rej) => {
-           return docRef.update({
-                completed: !complete
-            })
+        return docRef.update({
+            completed: !complete
+        })
 
         // })
     }
@@ -155,10 +166,10 @@ class Fire {
                 avatar: null
             })
 
-            if(user.avatar) {
+            if (user.avatar) {
                 remoteUri = await this.uploadPhotoAsync(user.avatar, `avatars/${this.uid}`)
 
-                db.set({avatar: remoteUri}, {merge: true})
+                db.set({ avatar: remoteUri }, { merge: true })
             }
         } catch (error) {
             alert("Error: ", error)
@@ -169,14 +180,14 @@ class Fire {
         return new Promise((res, rej) => {
             let docRef = this.firestore.collection('users').doc(this.uid)
             docRef.get()
-            .then(data => data.data())
-            .then(info => {
-                return {name: info.name, email: info.email, avatar: info.avatar}
-            })
-            .then(info => {
-                res(info)
-            })
-            .catch(error => rej(error))
+                .then(data => data.data())
+                .then(info => {
+                    return { name: info.name, email: info.email, avatar: info.avatar }
+                })
+                .then(info => {
+                    res(info)
+                })
+                .catch(error => rej(error))
         })
     }
 
@@ -188,12 +199,12 @@ class Fire {
                 email: info.email,
                 avatar: info.avatar
             })
-            .then(ref => {
-                res(ref)
-            })
-            .catch( err => {
-                rej(err)
-            })
+                .then(ref => {
+                    res(ref)
+                })
+                .catch(err => {
+                    rej(err)
+                })
         })
     }
 
