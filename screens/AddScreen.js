@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
@@ -12,7 +12,7 @@ require("firebase/firestore");
 export default class AddScreen extends React.Component {
     state = {
         text: "",
-        fav: null
+        favs: null
     }
 
     handleAddTask = () => {
@@ -51,19 +51,29 @@ export default class AddScreen extends React.Component {
                     ></TextInput>
                 </View>
                 <View style={styles.buttons}>
-                    <TouchableOpacity onPress={() => this.handleAddTask()}>
+                    <TouchableOpacity onPress={() => this.handleAddFav()}>
                         <Text style={styles.buttonText}>
-                        <Ionicons name="md-heart" size={24} color="#FF0000"></Ionicons>   Add to Favorites
+                        <Ionicons name="md-heart" size={18} color="#FF0000"></Ionicons>   Add to Favorites
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.handleAddTask()}>
                         <Text style={styles.buttonText}>
-                        <Ionicons name="md-checkmark" size={24} color="#77FF05"></Ionicons>   Add Task 
+                        <Ionicons name="md-checkmark" size={18} color="#77FF05"></Ionicons>   Add Task 
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <View>
-                    <Text>Testing</Text>
+                <View style={styles.favoriteTitle}>
+                    {/* <Text style={{fontSize: 25}}>Favorites</Text> */}
+                    <Ionicons name="md-heart" size={30} color="#FF0000"></Ionicons>
+                    <FlatList
+                        style={styles.favFeed}
+                        data={this.state.favs}
+                        render={({item}) => this.renderFavs(item)}
+                        keyExtractor={(item, index) => item}
+                        showsVerticalScrollIndicator={false}
+                    >
+
+                    </FlatList>
                 </View>
             </SafeAreaView>
         )
@@ -99,9 +109,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 50,
     },
     buttonText: {
+        fontSize: 16,
         backgroundColor: "#CECECE",
         borderWidth: 2,
         paddingHorizontal: 10,
         paddingVertical: 5
+    },
+    favoriteTitle: {
+        marginTop: 30,
+        justifyContent: "center",
+        alignItems: "center"
     }
 })
