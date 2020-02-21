@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, StatusBar } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
@@ -45,9 +45,10 @@ export default class AddScreen extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <StatusBar barStyle="light-content"></StatusBar>
                 <View style={styles.header}>
-                    <TouchableOpacity style={{position: "absolute", top: 10, left: 10}}onPress={() => this.props.navigation.goBack()}>
-                        <Ionicons name="md-arrow-back" size={24} color="#D8D9DB"></Ionicons>
+                    <TouchableOpacity style={styles.back} onPress={() => this.props.navigation.goBack()}>
+                        <Ionicons name="md-arrow-back" size={24} olor="#FFF"></Ionicons>
                     </TouchableOpacity>
                     <Text style={{justifyContent: "center", fontSize: 20}}>Add New Challenges Today</Text>
                 </View>
@@ -108,6 +109,17 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         top: 20,
         borderBottomColor: "#D8D9DB"
+    },
+    back: {
+        position: "absolute",
+        top: 10,
+        left: 20,
+        height: 32,
+        width: 32,
+        borderRadius: 16,
+        backgroundColor: "rgba(21, 22, 48, 0.1)",
+        alignItems: "center",
+        justifyContent: "center"
     },
     inputContainer: {
         margin: 25,
