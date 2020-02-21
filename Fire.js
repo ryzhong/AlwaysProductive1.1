@@ -113,6 +113,24 @@ class Fire {
         })
     }
 
+    deleteTask = async (docID) => {
+        let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks').doc(docID);
+        docRef.delete()
+        .catch(error => console.log(error))
+    }
+
+    addFav = async ({text}) => {
+        return new Promise((res, rej) => {
+            let docRef = this.firestore.collection('users').doc(this.uid)
+            docRef
+            .add({favs: text})
+            .then(ref => res(ref))
+            .catch(err => err)
+        })
+    }
+
+
+
     toggleCompleted = async (docID, complete) => {
         let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks').doc(docID);
         // console.log(docRef.get())
@@ -122,12 +140,6 @@ class Fire {
             })
 
         // })
-    }
-
-    deleteTask = async (docID) => {
-        let docRef = this.firestore.collection('users').doc(this.uid).collection('date').doc(this.timestamp).collection('tasks').doc(docID);
-        docRef.delete()
-        .catch(error => console.log(error))
     }
 
     createUser = async user => {
