@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, StatusBar, Keyboard } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
 import Fire from '../Fire'
@@ -9,7 +9,7 @@ const firebase = require("firebase");
 // Required for side-effects
 require("firebase/firestore");
 
-export default class AddScreen extends React.Component {
+export default class GoalsScreen extends React.Component {
     state = {
         text: "",
         goals: [],
@@ -26,12 +26,13 @@ export default class AddScreen extends React.Component {
             })
     }
 
-    handleAddGoal = (goal) => {
-        // alert('handling')
-        Fire.shared.addGoal({ text: goal.trim() })
+    handleAddGoal = (goals, text) => {
+        console.log(this.state.goals, text)
+        Fire.shared.addGoal(goals, text)
             .then(ref => {
                 this.setState({ text: "" });
-                this.props.navigation.navigate('Home');
+
+                Keyboard.dismiss();
             })
             .catch(error => {
                 alert(error)
@@ -40,14 +41,19 @@ export default class AddScreen extends React.Component {
 
     renderGoals = (goalItem) => {
         return (
-            <TouchableOpacity style={styles.goalFeedItem}>
-                <Ionicons name="md-trophy" size={20} color="#D6E519"></Ionicons>
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <View>
-                        <Text style={styles.goalText}>{goalItem}</Text>
+            <View style={styles.goalFeedItem}>
+                <SimpleLineIcons name="target" size={20} color="#F10707"></SimpleLineIcons>
+                <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <View>
+                            <Text style={styles.goalText}>{goalItem}</Text>
+                        </View>
                     </View>
                 </View>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={() => Fire.shared.deleteGoal(goalItem)}>
+                    <Ionicons style={{ marginLeft: 25 }} name="ios-close-circle-outline" size={28} color="#F10707" />
+                </TouchableOpacity>
+            </View>
         )
     }
 
@@ -58,7 +64,7 @@ export default class AddScreen extends React.Component {
                 <StatusBar barStyle="light-content"></StatusBar>
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.back} onPress={() => this.props.navigation.goBack()}>
-                        <Ionicons name="md-arrow-back" size={24} olor="#FFF"></Ionicons>
+                        <Ionicons name="md-arrow-back" size={24} color="#FFF"></Ionicons>
                     </TouchableOpacity>
                     <Text style={{ justifyContent: "center", fontSize: 20 }}>Goals</Text>
                 </View>
@@ -77,15 +83,20 @@ export default class AddScreen extends React.Component {
                     ></TextInput>
                 </View>
                 <View style={styles.buttons}>
-                    <TouchableOpacity onPress={() => this.handleAddGoal(this.state.text)}>
+                    <TouchableOpacity onPress={() => this.handleAddGoal(this.state.goals, this.state.text)}>
                         <Text style={styles.buttonText}>
-                            <Ionicons name="md-trophy" size={18} color="#000000"></Ionicons>   Add Goal
+                        <SimpleLineIcons name="target" size={18}></SimpleLineIcons>   Add Goal
                         </Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.goalTitle}>
                     {/* <Text style={{fontSize: 25}}>Favorites</Text> */}
-                    <Ionicons name="md-trophy" size={30} color="#E4F51D"></Ionicons>
+                    <TouchableOpacity>
+                        <SimpleLineIcons style={styles.goalTitleText} name="target" size={40}></SimpleLineIcons>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Ionicons style={styles.goalTitleText} name="md-trophy" size={40} color="#E4F51D"></Ionicons>
+                    </TouchableOpacity>
 
                 </View>
                 <View>
@@ -150,19 +161,27 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     goalTitle: {
+        flexDirection: "row",
         marginTop: 30,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+    },
+    goalTitleText: {
+        marginLeft: 40,
+        marginRight: 40,
+        borderBottomWidth: 1
     },
     goalFeed: {
-        marginHorizontal: 40
+        marginTop: 20,
+        marginHorizontal: 16
     },
     goalFeedItem: {
         backgroundColor: "#FFF",
         borderRadius: 5,
         padding: 8,
         flexDirection: "row",
-        marginVertical: 8
+        marginVertical: 8,
+        // justifyContent: "space-between"
     },
     goalText: {
         textTransform: "capitalize",
