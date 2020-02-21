@@ -119,11 +119,13 @@ class Fire {
             .catch(error => console.log(error))
     }
 
-    addFav = async ({ text }) => {
+    addFav = async (favs, task) => {
+        favs.push(task);
+        let uniqueFavs = [...new Set(favs)]
         return new Promise((res, rej) => {
             let docRef = this.firestore.collection('users').doc(this.uid)
             docRef
-                .add({ favs: text })
+                .add({ favs: uniqueFavs })
                 .then(ref => res(ref))
                 .catch(err => rej(err))
         })
@@ -139,6 +141,12 @@ class Fire {
                 })
                 .then(favs => res(favs))
                 .catch(err => rej(err))
+        })
+    }
+
+    deleteFav = async () => {
+        return new Promise((res, rej) => {
+
         })
     }
 
