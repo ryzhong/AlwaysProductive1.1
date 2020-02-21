@@ -46,7 +46,7 @@ export default class AlarmScreen extends React.Component {
     }
 
     updateRemainingSecs(time) {
-        if (time > 0) {
+        if (time <= 0) {
             clearInterval(this.state.interval)
             this.setState({ started: false })
         }
