@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, StatusBar, Dimensions, Keyboard } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, StatusBar, Dimensions, Keyboard, Alert } from 'react-native'
+import { Audio } from 'expo-av';
 
 const screen = Dimensions.get('window')
 
@@ -9,11 +10,11 @@ export default class AlarmScreen extends React.Component {
         mins: null,
         secs: null,
         started: false,
-        interval: null
+        interval: null,
+        soundObj: null
     }
 
     onChanged(time, num) {
-        console.log(time, num)
         num = num.replace(/[^0-9]/g, '')
         if (time === "min") {
             this.setState({ ...this.state, mins: num })
@@ -28,14 +29,11 @@ export default class AlarmScreen extends React.Component {
     }
 
     getTimeLeft(time) {
-        console.log(time)
         if (time === null) {
             return { mins: '00', secs: '00' };
         }
         const mins = Math.floor(time / 60);
-        console.log(mins)
         const secs = time - (mins * 60);
-        console.log(this.formatNum(mins), this.formatNum(secs))
         return { mins: this.formatNum(mins), secs: this.formatNum(secs) }
     }
 
@@ -46,6 +44,27 @@ export default class AlarmScreen extends React.Component {
     }
 
     updateRemainingSecs(time) {
+        if (time === 0) {
+            this.playAlarm(true);
+            // Alert.alert('Stop Alarm', [ {text: "Stop PLEASE", onPress: () => this.playAlarm(false) } ])
+            // console.log('play')
+            Alert.alert(
+                'Alaram',
+                'Your timer has finished',
+                [
+                    // { text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
+                    // {
+                    //     text: 'Cancel',
+                    //     onPress: () => console.log('Cancel Pressed'),
+                    //     style: 'cancel',
+                    // },
+                    // { text: 'OK', onPress: () => console.log('OK Pressed') },
+                    { text: "Stop PLEASE", onPress: () => this.stopAlarm() }
+                ],
+                { cancelable: false },
+            )
+
+        }
         if (time <= 0) {
             clearInterval(this.state.interval)
             this.setState({ started: false })
@@ -63,7 +82,7 @@ export default class AlarmScreen extends React.Component {
     }
 
     reset() {
-        if(!this.state.started) {
+        if (!this.state.started) {
             this.setRemainingSecs();
         }
     }
@@ -82,9 +101,22 @@ export default class AlarmScreen extends React.Component {
         return () => clearInterval(interval)
     }
 
+    playAlarm = async () => {
+        this.setState({soundObj: new Audio.Sound()})
+        try {
+            await this.state.soundObj.loadAsync(require('../assets/Wecker-sound.mp3'));
+            await this.state.soundObj.playAsync();
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    stopAlarm = async () => {
+        await this.state.soundObj.stopAsync();
+    }
+
     render() {
         let { mins, secs } = this.getTimeLeft(this.state.remainingSecs);
-        console.log('rendering', mins, secs)
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content"></StatusBar>
