@@ -12,23 +12,36 @@ require("firebase/firestore");
 export default class AddScreen extends React.Component {
     state = {
         text: "",
-        favs: ["Make Bed","Eat Breakfast"],
-        avatar: "../assets/ryanShoo.jpg"
+        favs: [],
+        avatar: "../assets/ryanShoo.jpg",
     }
 
     componentDidMount() {
         Fire.shared.getUserInfo()
             .then(user => {
-                this.setState({ avatar: user.avatar })
+                this.setState({ avatar: user.avatar, favs: user.favs })
+            })
+            .catch(error => {
+                alert(error)
             })
     }
 
-    handleAddTask = () => {
+    handleAddTask = (task) => {
         // alert('handling')
-        Fire.shared.addTask({ text: this.state.text.trim() })
+        Fire.shared.addTask({ text: task.trim() })
             .then(ref => {
                 this.setState({ text: "" });
                 this.props.navigation.navigate('Home');
+            })
+            .catch(error => {
+                alert(error)
+            })
+    }
+
+    handleAddFav = (favs, text) => {
+        Fire.shared.addFav(favs, text)
+            .then(ref => {
+                this.setState({ text: "" });
             })
             .catch(error => {
                 alert(error)
@@ -40,10 +53,10 @@ export default class AddScreen extends React.Component {
         return (
             <View style={styles.favFeedItem}>
                 <Ionicons name="md-heart" size={20} color="#FF0000"></Ionicons>
-                <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <View>
 
-                    <Text style={styles.favText}>{favItem}</Text>
+                        <Text style={styles.favText}>{favItem}</Text>
                     </View>
                 </View>
             </View>
@@ -51,7 +64,7 @@ export default class AddScreen extends React.Component {
     }
 
     render() {
-        let pic = this.state.avatar ? {uri: this.state.avatar} : require("../assets/ryanShoo.jpg");
+        let pic = this.state.avatar ? { uri: this.state.avatar } : require("../assets/ryanShoo.jpg");
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar barStyle="light-content"></StatusBar>
@@ -59,7 +72,7 @@ export default class AddScreen extends React.Component {
                     <TouchableOpacity style={styles.back} onPress={() => this.props.navigation.goBack()}>
                         <Ionicons name="md-arrow-back" size={24} olor="#FFF"></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{justifyContent: "center", fontSize: 20}}>Add New Challenges Today</Text>
+                    <Text style={{ justifyContent: "center", fontSize: 20 }}>Add New Challenges Today</Text>
                 </View>
 
 
@@ -76,14 +89,14 @@ export default class AddScreen extends React.Component {
                     ></TextInput>
                 </View>
                 <View style={styles.buttons}>
-                    <TouchableOpacity onPress={() => this.handleAddFav()}>
+                    <TouchableOpacity onPress={() => this.handleAddFav(this.state.favs, this.state.text)}>
                         <Text style={styles.buttonText}>
-                        <Ionicons name="md-heart" size={18} color="#FF0000"></Ionicons>   Add to Favorites
+                            <Ionicons name="md-heart" size={18} color="#FF0000"></Ionicons>   Add to Favorites
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.handleAddTask()}>
+                    <TouchableOpacity onPress={() => this.handleAddTask(this.state.text)}>
                         <Text style={styles.buttonText}>
-                        <Ionicons name="md-checkmark" size={18} color="#77FF05"></Ionicons>   Add Task 
+                            <Ionicons name="md-checkmark" size={18} color="#77FF05"></Ionicons>   Add Task
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -96,7 +109,7 @@ export default class AddScreen extends React.Component {
                     <FlatList
                         style={styles.favFeed}
                         data={this.state.favs}
-                        renderItem={({item}) => this.renderFavs(item)}
+                        renderItem={({ item }) => this.renderFavs(item)}
                         keyExtractor={(item, index) => item}
                         showsVerticalScrollIndicator={false}
                     />
