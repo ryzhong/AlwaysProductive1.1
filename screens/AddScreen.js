@@ -12,7 +12,7 @@ require("firebase/firestore");
 export default class AddScreen extends React.Component {
     state = {
         text: "",
-        favs: null
+        favs: ["Make Bed","Eat Breakfast"]
     }
 
     handleAddTask = () => {
@@ -27,6 +27,21 @@ export default class AddScreen extends React.Component {
             })
     }
 
+    renderFavs = (favItem) => {
+        console.log(favItem)
+        return (
+            <View style={styles.favFeedItem}>
+                <Ionicons name="md-heart" size={20} color="#FF0000"></Ionicons>
+                <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+                    <View>
+
+                    <Text style={styles.favText}>{favItem}</Text>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
@@ -34,7 +49,7 @@ export default class AddScreen extends React.Component {
                     <TouchableOpacity style={{position: "absolute", top: 10, left: 10}}onPress={() => this.props.navigation.goBack()}>
                         <Ionicons name="md-arrow-back" size={24} color="#D8D9DB"></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{justifyContent: "center"}}>Add New Challenges For Today!</Text>
+                    <Text style={{justifyContent: "center", fontSize: 20}}>Add New Challenges Today</Text>
                 </View>
 
 
@@ -45,7 +60,7 @@ export default class AddScreen extends React.Component {
                         multiline={true}
                         numberOfLines={4}
                         style={{ flex: 1 }}
-                        placeholder="Add a task for challenge"
+                        placeholder="Add a task"
                         onChangeText={text => this.setState({ text })}
                         value={this.state.text}
                     ></TextInput>
@@ -65,15 +80,16 @@ export default class AddScreen extends React.Component {
                 <View style={styles.favoriteTitle}>
                     {/* <Text style={{fontSize: 25}}>Favorites</Text> */}
                     <Ionicons name="md-heart" size={30} color="#FF0000"></Ionicons>
+
+                </View>
+                <View>
                     <FlatList
                         style={styles.favFeed}
                         data={this.state.favs}
-                        render={({item}) => this.renderFavs(item)}
+                        renderItem={({item}) => this.renderFavs(item)}
                         keyExtractor={(item, index) => item}
                         showsVerticalScrollIndicator={false}
-                    >
-
-                    </FlatList>
+                    />
                 </View>
             </SafeAreaView>
         )
@@ -113,11 +129,28 @@ const styles = StyleSheet.create({
         backgroundColor: "#CECECE",
         borderWidth: 2,
         paddingHorizontal: 10,
-        paddingVertical: 5
+        paddingVertical: 5,
+        borderRadius: 10
     },
     favoriteTitle: {
         marginTop: 30,
         justifyContent: "center",
         alignItems: "center"
+    },
+    favFeed: {
+        marginHorizontal: 40
+    },
+    favFeedItem: {
+        backgroundColor: "#FFF",
+        borderRadius: 5,
+        padding: 8,
+        flexDirection: "row",
+        marginVertical: 8
+    },
+    favText: {
+        marginTop: 3,
+        marginLeft: 12,
+        fontSize: 14,
+        color: "#838899"
     }
 })
