@@ -19,7 +19,7 @@ export default class AlarmScreen extends React.Component {
             this.setState({ ...this.state, mins: num })
         }
         if (time === "sec") {
-            this.setState({  ...this.state, secs: num })
+            this.setState({ ...this.state, secs: num })
         }
     }
 
@@ -29,33 +29,37 @@ export default class AlarmScreen extends React.Component {
 
     getTimeLeft(time) {
         console.log(time)
-        if(time === null) {
-            return {mins: '00', secs: '00'};
+        if (time === null) {
+            return { mins: '00', secs: '00' };
         }
         const mins = Math.floor(time / 60);
         console.log(mins)
         const secs = time - (mins * 60);
         console.log(this.formatNum(mins), this.formatNum(secs))
-        return { mins: this.formatNum(mins), secs: this.formatNum(secs)}
+        return { mins: this.formatNum(mins), secs: this.formatNum(secs) }
     }
 
     setRemainingSecs() {
         let remainingSecs = (Number(this.state.mins) * 60) + Number(this.state.secs)
-        this.setState({  ...this.state, remainingSecs })
+        this.setState({ ...this.state, remainingSecs })
         Keyboard.dismiss();
     }
 
     updateRemainingSecs(time) {
-        if(time === 0) {
+        if (time <= 0) {
             clearInterval(this.state.interval)
+            this.setState({ started: false })
         }
-        this.setState({  ...this.state, remainingSecs: time })
+        this.setState({ ...this.state, remainingSecs: time })
     }
 
     toggle() {
-        this.setState({ started: !this.state.started }, () => {
-            this.startTimer()
-        })
+
+        if (this.state.remainingSecs > 0) {
+            this.setState({ started: !this.state.started }, () => {
+                this.startTimer()
+            })
+        }
     }
 
     reset() {
@@ -69,10 +73,8 @@ export default class AlarmScreen extends React.Component {
             interval = setInterval(() => {
                 this.updateRemainingSecs(this.state.remainingSecs - 1)
             }, 1000)
-            this.setState({interval})
+            this.setState({ interval })
         } else if (!this.state.started || this.state.remainingSecs === 0) {
-            console.log('im suppose to stop', interval)
-
             clearInterval(this.state.interval)
         }
         return () => clearInterval(interval)
@@ -93,7 +95,7 @@ export default class AlarmScreen extends React.Component {
                         value={this.state.mins}
                     >
                     </TextInput>
-                    <Text style={{fontSize: 20}}>mins</Text>
+                    <Text style={{ fontSize: 20 }}>mins</Text>
                     <TextInput
                         style={styles.asktimeInput}
                         keyboardType='numeric'
@@ -102,8 +104,8 @@ export default class AlarmScreen extends React.Component {
                         value={this.state.secs}
                     >
                     </TextInput>
-                    <Text style={{fontSize: 20}}>secs</Text>
-                    <TouchableOpacity onPress={() => this.setRemainingSecs() }>
+                    <Text style={{ fontSize: 20 }}>secs</Text>
+                    <TouchableOpacity onPress={() => this.setRemainingSecs()}>
                         <Text style={styles.setButton}>Set Timer</Text>
                     </TouchableOpacity>
                 </View>
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
         // height: screen.height / 10,
         backgroundColor: "#E9446A",
         borderWidth: 3,
-        fontSize: 20, 
+        fontSize: 20,
         marginLeft: 30,
         justifyContent: "center",
         textAlign: "center",
