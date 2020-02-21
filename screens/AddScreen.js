@@ -12,7 +12,15 @@ require("firebase/firestore");
 export default class AddScreen extends React.Component {
     state = {
         text: "",
-        favs: ["Make Bed","Eat Breakfast"]
+        favs: ["Make Bed","Eat Breakfast"],
+        avatar: "../assets/ryanShoo.jpg"
+    }
+
+    componentDidMount() {
+        Fire.shared.getUserInfo()
+            .then(user => {
+                this.setState({ avatar: user.avatar })
+            })
     }
 
     handleAddTask = () => {
@@ -43,6 +51,7 @@ export default class AddScreen extends React.Component {
     }
 
     render() {
+        let pic = this.state.avatar ? {uri: this.state.avatar} : require("../assets/ryanShoo.jpg");
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar barStyle="light-content"></StatusBar>
@@ -55,7 +64,7 @@ export default class AddScreen extends React.Component {
 
 
                 <View style={styles.inputContainer}>
-                    <Image source={require("../assets/ryanShoo.jpg")} style={styles.avatar}></Image>
+                    <Image source={pic} style={styles.avatar}></Image>
                     <TextInput
                         // autoFocus={true}
                         multiline={true}
