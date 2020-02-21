@@ -122,10 +122,19 @@ class Fire {
     addFav = async (favs, task) => {
         favs.push(task);
         let uniqueFavs = [...new Set(favs)]
+        this.updateFav(uniqueFavs)
+    }
+    
+    deleteFav = async (favs, task) => {
+        let filteredFavs = favs.filter(ele => ele !== task)
+        this.updateFav(filteredFavs)
+    }
+
+    updateFav = async (favs) => {
         return new Promise((res, rej) => {
             let docRef = this.firestore.collection('users').doc(this.uid)
             docRef
-                .add({ favs: uniqueFavs })
+                .update({ favs })
                 .then(ref => res(ref))
                 .catch(err => rej(err))
         })
@@ -141,12 +150,6 @@ class Fire {
                 })
                 .then(favs => res(favs))
                 .catch(err => rej(err))
-        })
-    }
-
-    deleteFav = async () => {
-        return new Promise((res, rej) => {
-
         })
     }
 
@@ -171,7 +174,8 @@ class Fire {
             db.set({
                 name: user.name,
                 email: user.email,
-                avatar: null
+                avatar: null,
+                favs: []
             })
 
             if (user.avatar) {
