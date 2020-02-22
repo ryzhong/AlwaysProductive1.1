@@ -140,6 +140,27 @@ class Fire {
         })
     }
 
+    addGoal = async (goals, task) => {
+        goals.push(task);
+        let uniqueGoals = [...new Set(goals)]
+        this.updateGoal(uniqueGoals)
+    }
+    
+    deleteGoal = async (goals, task) => {
+        let filteredGoals = goals.filter(ele => ele !== task)
+        this.updateGoal(filteredGoals)
+    }
+
+    updateGoal = async (goals) => {
+        return new Promise((res, rej) => {
+            let docRef = this.firestore.collection('users').doc(this.uid)
+            docRef
+                .update({ goals })
+                .then(ref => res(ref))
+                .catch(err => rej(err))
+        })
+    }
+
     getFavs = async () => {
         return new Promise((res, rej) => {
             let docRef = this.firestore.collection('users').doc(this.uid)
@@ -175,7 +196,8 @@ class Fire {
                 name: user.name,
                 email: user.email,
                 avatar: null,
-                favs: []
+                favs: [],
+                goals: []
             })
 
             if (user.avatar) {
@@ -194,7 +216,7 @@ class Fire {
             docRef.get()
                 .then(data => data.data())
                 .then(info => {
-                    return { name: info.name, email: info.email, avatar: info.avatar, favs: info.favs }
+                    return { name: info.name, email: info.email, avatar: info.avatar, favs: info.favs, goals: info.goals }
                 })
                 .then(info => {
                     res(info)
