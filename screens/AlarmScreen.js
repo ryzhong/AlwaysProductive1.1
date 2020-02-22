@@ -49,7 +49,7 @@ export default class AlarmScreen extends React.Component {
             // Alert.alert('Stop Alarm', [ {text: "Stop PLEASE", onPress: () => this.playAlarm(false) } ])
             // console.log('play')
             Alert.alert(
-                'Alaram',
+                'Alarm',
                 'Your timer has finished',
                 [
                     // { text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
