@@ -16,11 +16,30 @@ export default class AddScreen extends React.Component {
         avatar: "../assets/ryanShoo.jpg",
     }
 
+    unsubscribe = Fire.shared.firestore.collection('users')
+        .onSnapshot((doc) => {
+            this.update();
+        })
+
     componentDidMount() {
         Fire.shared.getUserInfo()
             .then(user => {
                 this.setState({ avatar: user.avatar, favs: user.favs })
             })
+            .catch(error => {
+                alert(error)
+            })
+    }
+
+    componentWillUnmount() {
+        if (this.unsubscribe) {
+            this.unsubscribe()
+        }
+    }
+
+    update() {
+        Fire.shared.getUserInfo()
+            .then(user => { this.setState({ favs: user.favs}) })
             .catch(error => {
                 alert(error)
             })
@@ -58,12 +77,14 @@ export default class AddScreen extends React.Component {
         return (
             <TouchableOpacity style={styles.favFeedItem} onPress={() => this.handleAddFavToTask(favItem)}>
                 <Ionicons name="md-heart" size={20} color="#FF0000"></Ionicons>
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <View>
-
                         <Text style={styles.favText}>{favItem}</Text>
                     </View>
                 </View>
+                <TouchableOpacity onPress={() => Fire.shared.deleteFav(this.state.favs, favItem)}>
+                    <Ionicons style={{ marginLeft: 25 }} name="ios-close-circle-outline" size={28} color="#F10707" />
+                </TouchableOpacity>
             </TouchableOpacity>
         )
     }
@@ -150,7 +171,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         margin: 25,
-        flexDirection: "row"
+        flexDirection: "row",
     },
     avatar: {
         width: 48,
