@@ -89,10 +89,30 @@ export default class GoalsScreen extends React.Component {
         )
     }
 
+    renderCompleted = (goalItem) => {
+        return (
+            <View style={styles.goalFeedItem}>
+                <SimpleLineIcons name="target" size={20} color="#F10707"></SimpleLineIcons>
+                <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <View>
+                            <Text style={styles.goalText}>{goalItem}</Text>
+                        </View>
+                    </View>
+                </View>
+                <TouchableOpacity onPress={() => Fire.shared.deleteGoal(this.state.goals, goalItem)}>
+                    <Ionicons style={{ marginLeft: 25 }} name="ios-close-circle-outline" size={28} color="#F10707" />
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
     render() {
         let pic = this.state.avatar ? { uri: this.state.avatar } : require("../assets/ryanShoo.jpg");
         let displayGoal = this.state.goalsDisplayed ? 1 : 0;
         let displayCompleted = this.state.goalsDisplayed ? 0 : 1;
+        let data = this.state.goalsDisplayed ? this.state.goals : this.state.completed;
+        let render = this.state.goalsDisplayed ? this.renderGoals : this.renderCompleted;
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar barStyle="light-content"></StatusBar>
@@ -125,7 +145,7 @@ export default class GoalsScreen extends React.Component {
                 </View>
                 <View style={styles.goalTitle}>
                     {/* <Text style={{fontSize: 25}}>Favorites</Text> */}
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={ () => this.setState({goalsDisplayed: true})}>
                         <SimpleLineIcons
                             style={
                                 {
@@ -138,7 +158,7 @@ export default class GoalsScreen extends React.Component {
                             size={40}>
                         </SimpleLineIcons>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={ () => this.setState({goalsDisplayed: false})}>
                         <Ionicons
                             style={
                                 {
@@ -157,8 +177,8 @@ export default class GoalsScreen extends React.Component {
                 <View>
                     <FlatList
                         style={styles.goalFeed}
-                        data={this.state.goals}
-                        renderItem={({ item }) => this.renderGoals(item)}
+                        data={data}
+                        renderItem={({ item }) => render(item)}
                         keyExtractor={(item, index) => item}
                         showsVerticalScrollIndicator={false}
                     />
