@@ -162,10 +162,11 @@ class Fire {
     }
 
     updateCompleted = async (goals, completed, goal) => {
-        this.deleteGoal(goals, goal)
-        completed.push(goal);
-        let uniqueCompleted = [...new Set(completed)]
         return new Promise((res, rej) => {
+            this.deleteGoal(goals, goal)
+            completed.push(goal);
+            let uniqueCompleted = [...new Set(completed)]
+            console.log('completed', uniqueCompleted)
             let docRef = this.firestore.collection('users').doc(this.uid)
             docRef
                 .update({completed: uniqueCompleted})

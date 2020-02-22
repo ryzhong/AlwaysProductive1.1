@@ -31,12 +31,12 @@ export default class LoginScreen extends React.Component {
 
                 <Image 
                     source={require("../assets/loginBottom.png")}
-                    style={{position: "absolute", height: 180, width: 420, top: 150}}
+                    style={{position: "absolute", height: 180, width: 420, top: 130}}
                 ></Image>
-
+{/* 
                 <Text style={styles.greeting}>
                     {`ALWAYS PRODUCTIVE!`}
-                </Text>
+                </Text> */}
 
                 <View style={styles.errorMessage}>
                     {this.state.errorMessage && <Text style={styles.error}>{this.state.errorMessage}</Text>}

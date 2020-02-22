@@ -15,13 +15,33 @@ export default class GoalsScreen extends React.Component {
         goals: [],
         completed: [],
         avatar: "../assets/ryanShoo.jpg",
+        goalsDisplayed: true
     }
+
+    unsubscribe = Fire.shared.firestore.collection('users')
+        .onSnapshot((doc) => {
+            this.update();
+        })
 
     componentDidMount() {
         Fire.shared.getUserInfo()
             .then(user => {
                 this.setState({ avatar: user.avatar, goals: user.goals, completed: user.completed })
             })
+            .catch(error => {
+                alert(error)
+            })
+    }
+
+    componentWillUnmount() {
+        if (this.unsubscribe) {
+            this.unsubscribe()
+        }
+    }
+
+    update() {
+        Fire.shared.getUserInfo()
+            .then(user => { this.setState({ goals: user.goals, completed: user.completed }) })
             .catch(error => {
                 alert(error)
             })
@@ -40,8 +60,12 @@ export default class GoalsScreen extends React.Component {
             })
     }
 
+
     handleCompleteGoal = (goals, completed, goal) => {
-        Fire.shared.updateCompleted(goal)
+        Fire.shared.updateCompleted(goals, completed, goal)
+            .catch(error => {
+                alert(error)
+            })
     }
 
     renderGoals = (goalItem) => {
@@ -55,7 +79,10 @@ export default class GoalsScreen extends React.Component {
                         </View>
                     </View>
                 </View>
-                <TouchableOpacity onPress={() => Fire.shared.deleteGoal(goalItem)}>
+                <TouchableOpacity onPress={() => Fire.shared.updateCompleted(this.state.goals, this.state.completed, goalItem)}>
+                    <Ionicons style={{ marginLeft: 10 }} name="ios-checkmark-circle-outline" size={28} color="#50FF03" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => Fire.shared.deleteGoal(this.state.goals, goalItem)}>
                     <Ionicons style={{ marginLeft: 25 }} name="ios-close-circle-outline" size={28} color="#F10707" />
                 </TouchableOpacity>
             </View>
@@ -64,6 +91,8 @@ export default class GoalsScreen extends React.Component {
 
     render() {
         let pic = this.state.avatar ? { uri: this.state.avatar } : require("../assets/ryanShoo.jpg");
+        let displayGoal = this.state.goalsDisplayed ? 1 : 0;
+        let displayCompleted = this.state.goalsDisplayed ? 0 : 1;
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar barStyle="light-content"></StatusBar>
@@ -90,17 +119,38 @@ export default class GoalsScreen extends React.Component {
                 <View style={styles.buttons}>
                     <TouchableOpacity onPress={() => this.handleAddGoal(this.state.goals, this.state.text)}>
                         <Text style={styles.buttonText}>
-                        <SimpleLineIcons name="target" size={18}></SimpleLineIcons>   Add Goal
+                            <SimpleLineIcons name="target" size={18}></SimpleLineIcons>   Add Goal
                         </Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.goalTitle}>
                     {/* <Text style={{fontSize: 25}}>Favorites</Text> */}
                     <TouchableOpacity>
-                        <SimpleLineIcons style={styles.goalTitleText} name="target" size={40}></SimpleLineIcons>
+                        <SimpleLineIcons
+                            style={
+                                {
+                                    marginLeft: 40,
+                                    marginRight: 40,
+                                    borderBottomWidth: displayGoal
+                                }
+                            }
+                            name="target"
+                            size={40}>
+                        </SimpleLineIcons>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Ionicons style={styles.goalTitleText} name="md-trophy" size={40} color="#E4F51D"></Ionicons>
+                        <Ionicons
+                            style={
+                                {
+                                    marginLeft: 40,
+                                    marginRight: 40,
+                                    borderBottomWidth: displayCompleted
+                                }
+                            }
+                            name="md-trophy"
+                            size={40}
+                            color="#E4F51D">
+                        </Ionicons>
                     </TouchableOpacity>
 
                 </View>
