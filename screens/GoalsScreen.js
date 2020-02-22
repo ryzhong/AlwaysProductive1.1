@@ -13,13 +13,14 @@ export default class GoalsScreen extends React.Component {
     state = {
         text: "",
         goals: [],
+        completed: [],
         avatar: "../assets/ryanShoo.jpg",
     }
 
     componentDidMount() {
         Fire.shared.getUserInfo()
             .then(user => {
-                this.setState({ avatar: user.avatar, goals: user.goals })
+                this.setState({ avatar: user.avatar, goals: user.goals, completed: user.completed })
             })
             .catch(error => {
                 alert(error)
@@ -37,6 +38,10 @@ export default class GoalsScreen extends React.Component {
             .catch(error => {
                 alert(error)
             })
+    }
+
+    handleCompleteGoal = (goals, completed, goal) => {
+        Fire.shared.updateCompleted(goal)
     }
 
     renderGoals = (goalItem) => {

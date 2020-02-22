@@ -124,7 +124,7 @@ class Fire {
         let uniqueFavs = [...new Set(favs)]
         this.updateFav(uniqueFavs)
     }
-    
+
     deleteFav = async (favs, task) => {
         let filteredFavs = favs.filter(ele => ele !== task)
         this.updateFav(filteredFavs)
@@ -145,7 +145,7 @@ class Fire {
         let uniqueGoals = [...new Set(goals)]
         this.updateGoal(uniqueGoals)
     }
-    
+
     deleteGoal = async (goals, task) => {
         let filteredGoals = goals.filter(ele => ele !== task)
         this.updateGoal(filteredGoals)
@@ -156,6 +156,19 @@ class Fire {
             let docRef = this.firestore.collection('users').doc(this.uid)
             docRef
                 .update({ goals })
+                .then(ref => res(ref))
+                .catch(err => rej(err))
+        })
+    }
+
+    updateCompleted = async (goals, completed, goal) => {
+        this.deleteGoal(goals, goal)
+        completed.push(goal);
+        let uniqueCompleted = [...new Set(completed)]
+        return new Promise((res, rej) => {
+            let docRef = this.firestore.collection('users').doc(this.uid)
+            docRef
+                .update({completed: uniqueCompleted})
                 .then(ref => res(ref))
                 .catch(err => rej(err))
         })
@@ -197,7 +210,8 @@ class Fire {
                 email: user.email,
                 avatar: null,
                 favs: [],
-                goals: []
+                goals: [],
+                completed: []
             })
 
             if (user.avatar) {
@@ -216,7 +230,7 @@ class Fire {
             docRef.get()
                 .then(data => data.data())
                 .then(info => {
-                    return { name: info.name, email: info.email, avatar: info.avatar, favs: info.favs, goals: info.goals }
+                    return { name: info.name, email: info.email, avatar: info.avatar, favs: info.favs, goals: info.goals, completed: info.completed }
                 })
                 .then(info => {
                     res(info)
