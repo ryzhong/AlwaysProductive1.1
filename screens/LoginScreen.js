@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
         height: 72,
         alignItems: "center",
         justifyContent: "center",
-        marginHorizontal: 30
+        marginHorizontal: 30,
+        marginTop: 40
     },
     error: {
         color: "#E9446A",
