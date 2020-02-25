@@ -43,6 +43,8 @@ export default class RegisterScreen extends React.Component {
 
     handleSignUp = () => {
         Fire.shared.createUser(this.state.user)
+        .catch(errorMessage => this.setState({errorMessage}, () => console.log('here', this.state.errorMessage)))
+        console.log('done')
     }
 
     render() {
