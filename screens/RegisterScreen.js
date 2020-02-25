@@ -33,18 +33,17 @@ export default class RegisterScreen extends React.Component {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4,3]
+            aspect: [4, 3]
         })
 
-        if(!result.cancelled) {
-            this.setState({user: { ...this.state.user, avatar: result.uri} })
+        if (!result.cancelled) {
+            this.setState({ user: { ...this.state.user, avatar: result.uri } })
         }
     }
 
     handleSignUp = () => {
         Fire.shared.createUser(this.state.user)
-        .catch(errorMessage => this.setState({errorMessage}, () => console.log('here', this.state.errorMessage)))
-        console.log('done')
+            .catch(errorMessage => this.setState({ errorMessage }))
     }
 
     render() {
@@ -63,7 +62,7 @@ export default class RegisterScreen extends React.Component {
                     <Ionicons name="ios-arrow-round-back" size={32} color="#FFF"></Ionicons>
                 </TouchableOpacity>
 
-                <View style={{ position: "absolute", top: 180, alignItems: "center", width: "100%" }}>
+                <View style={{ alignItems: "center", width: "100%" }}>
                     <Text style={styles.greeting}>
                         {`Sign up to get started. `}
                     </Text>
@@ -79,27 +78,27 @@ export default class RegisterScreen extends React.Component {
                 </View>
 
 
-                <View style={styles.errorMessage}>
-                    {this.state.errorMessage && <Text style={styles.error}>{this.state.errorMessage}</Text>}
-                </View>
 
                 <View style={styles.form}>
-                    <View style={{ marginTop: 80 }}>
+                    <View style={styles.errorMessage}>
+                        {this.state.errorMessage && <Text style={styles.error}>{this.state.errorMessage}</Text>}
+                    </View>
+                    <View>
                         <Text style={styles.inputTitle}>Full Name</Text>
                         <TextInput
                             style={styles.input}
                             autoCapitalize="none"
-                            onChangeText={name => this.setState({ user: {...this.state.user, name } })}
+                            onChangeText={name => this.setState({ user: { ...this.state.user, name } })}
                             value={this.state.user.name}
                         ></TextInput>
                     </View>
 
-                    <View style={{ marginTop: 15 }}>
+                    <View>
                         <Text style={styles.inputTitle}>Email Address</Text>
                         <TextInput
                             style={styles.input}
                             autoCapitalize="none"
-                            onChangeText={email => this.setState({ user: {...this.state.user, email } })}
+                            onChangeText={email => this.setState({ user: { ...this.state.user, email } })}
                             value={this.state.user.email}
                         ></TextInput>
                     </View>
@@ -110,7 +109,7 @@ export default class RegisterScreen extends React.Component {
                             style={styles.input}
                             secureTextEntry
                             autoCapitalize="none"
-                            onChangeText={password => this.setState({ user: {...this.state.user, password} })}
+                            onChangeText={password => this.setState({ user: { ...this.state.user, password } })}
                             value={this.state.user.password}
                         ></TextInput>
                     </View>
@@ -142,15 +141,14 @@ const styles = StyleSheet.create({
         flex: 1
     },
     greeting: {
-        marginTop: 15,
         fontSize: 18,
         fontWeight: "400",
         textAlign: "center"
     },
     errorMessage: {
-        height: 72,
-        alignItems: "center",
-        justifyContent: "center",
+        height: 48,
+        // alignItems: "center",
+        // justifyContent: "center",
         marginHorizontal: 30
     },
     error: {
