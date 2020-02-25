@@ -207,29 +207,31 @@ class Fire {
     }
 
     createUser = async user => {
-        let remoteUri = null
-        try {
-            await firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+        return new Promise((res, rej) => {
+            let remoteUri = null
 
-            let db = this.firestore.collection("users").doc(this.uid)
+            firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+                .then(ref => {
+                    let db = this.firestore.collection("users").doc(this.uid)
+                    db.set({
+                      name: user.name,
+                      email: user.email,
+                      avatar: null,
+                      favs: [],
+                      goals: [],
+                      completed: []
+                    })
+                    if (user.avatar) {
+                        remoteUri = this.uploadPhotoAsync(user.avatar, `avatars/${this.uid}`)
 
-            db.set({
-                name: user.name,
-                email: user.email,
-                avatar: null,
-                favs: [],
-                goals: [],
-                completed: []
-            })
+                        db.set({ avatar: remoteUri }, { merge: true })
+                    }
 
-            if (user.avatar) {
-                remoteUri = await this.uploadPhotoAsync(user.avatar, `avatars/${this.uid}`)
+                })
+                .catch(err =>  rej("" + err) )
 
-                db.set({ avatar: remoteUri }, { merge: true })
-            }
-        } catch (error) {
-            alert("Error: ", error)
-        }
+        })
+
     }
 
     getUserInfo = async () => {
