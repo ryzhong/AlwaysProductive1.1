@@ -168,15 +168,14 @@ class Fire {
 
     updateCompleted = async (goals, completed, goal) => {
         return new Promise((res, rej) => {
-            if(goal) {
+            if (goal) {
                 this.deleteGoal(goals, goal)
                 completed.push(goal);
             }
             let uniqueCompleted = [...new Set(completed)]
-            console.log('completed', uniqueCompleted)
             let docRef = this.firestore.collection('users').doc(this.uid)
             docRef
-                .update({completed: uniqueCompleted})
+                .update({ completed: uniqueCompleted })
                 .then(ref => res(ref))
                 .catch(err => rej(err))
         })
@@ -211,24 +210,27 @@ class Fire {
             let remoteUri = null
 
             firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-                .then(ref => {
-                    let db = this.firestore.collection("users").doc(this.uid)
+                .then( async ref => {
+                    let db = await this.firestore.collection("users").doc(this.uid);
+                    return db
+                })
+                .then( async db => {
                     db.set({
-                      name: user.name,
-                      email: user.email,
-                      avatar: null,
-                      favs: [],
-                      goals: [],
-                      completed: []
+                        name: user.name,
+                        email: user.email,
+                        avatar: null,
+                        favs: [],
+                        goals: [],
+                        completed: []
                     })
                     if (user.avatar) {
-                        remoteUri = this.uploadPhotoAsync(user.avatar, `avatars/${this.uid}`)
+                        remoteUri = await this.uploadPhotoAsync(user.avatar, `avatars/${this.uid}`)
 
                         db.set({ avatar: remoteUri }, { merge: true })
                     }
 
                 })
-                .catch(err =>  rej("" + err) )
+                .catch(err => rej("" + err))
 
         })
 
