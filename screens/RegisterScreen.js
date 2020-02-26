@@ -87,7 +87,6 @@ export default class RegisterScreen extends React.Component {
                         <Text style={styles.inputTitle}>Full Name</Text>
                         <TextInput
                             style={styles.input}
-                            autoCapitalize="none"
                             onChangeText={name => this.setState({ user: { ...this.state.user, name } })}
                             value={this.state.user.name}
                         ></TextInput>
