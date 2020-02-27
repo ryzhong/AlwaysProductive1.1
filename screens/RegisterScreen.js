@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, Platform, UIManager } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, Platform, UIManager, KeyboardAvoidingView, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import * as firebase from 'firebase'
 import UserPermissions from '../utilities/UserPermissions'
@@ -50,7 +50,14 @@ export default class RegisterScreen extends React.Component {
         // LayoutAnimation.easeInEaseOut();
 
         return (
-            <View style={styles.container}>
+            <ScrollView>
+            <KeyboardAvoidingView
+                style={styles.container}
+                style = {{ flex: 1 }}
+                // keyboardVerticalOffset = {50}
+                // behavior={Platform.OS === "ios" ? "padding" : null}
+                behavior="padding" enabled>
+                {/* <View style={styles.container}> */}
                 <StatusBar barStyle="light-content"></StatusBar>
 
                 <Image
@@ -128,9 +135,9 @@ export default class RegisterScreen extends React.Component {
                     >Login </Text>
                 </TouchableOpacity>
 
-            </View>
-
-
+                {/* </View> */}
+            </KeyboardAvoidingView>
+            </ScrollView>
         )
     }
 }
