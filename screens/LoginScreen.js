@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, LayoutAnimation } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, LayoutAnimation, KeyboardAvoidingView, ScrollView } from 'react-native'
 import * as firebase from 'firebase'
 
 export default class LoginScreen extends React.Component {
@@ -21,66 +21,72 @@ export default class LoginScreen extends React.Component {
     render() {
         // LayoutAnimation.easeInEaseOut();
         return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content"></StatusBar>
+            <ScrollView>
+                <KeyboardAvoidingView style={styles.container}
+                    style={{ flex: 1 }}
+                    keyboardVerticalOffset = {50}
+                    // behavior={Platform.OS === "ios" ? "padding" : null}
+                    behavior="padding" enabled>
+                    <StatusBar barStyle="light-content"></StatusBar>
 
-                <Image 
-                    source={require('../assets/loginTop.png')} 
-                    style={{height: 200, width: 270, marginTop: 50, alignSelf: "center"}}
-                ></Image>
+                    <Image
+                        source={require('../assets/loginTop.png')}
+                        style={{ height: 200, width: 270, marginTop: 50, alignSelf: "center" }}
+                    ></Image>
 
-                <Image 
-                    source={require("../assets/loginBottom.png")}
-                    style={{position: "absolute", height: 180, width: 420, top: 130}}
-                ></Image>
-{/* 
+                    <Image
+                        source={require("../assets/loginBottom.png")}
+                        style={{ position: "absolute", height: 180, width: 420, top: 130 }}
+                    ></Image>
+                    {/* 
                 <Text style={styles.greeting}>
                     {`ALWAYS PRODUCTIVE!`}
                 </Text> */}
 
-                <View style={styles.errorMessage}>
-                    {this.state.errorMessage && <Text style={styles.error}>{this.state.errorMessage}</Text>}
-                </View>
-
-                <View style={styles.form}>
-                    <View>
-                        <Text style={styles.inputTitle}>Email Address</Text>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            onChangeText={email => this.setState({ email })}
-                            value={this.state.email}
-                        ></TextInput>
+                    <View style={styles.errorMessage}>
+                        {this.state.errorMessage && <Text style={styles.error}>{this.state.errorMessage}</Text>}
                     </View>
 
-                    <View style={{ marginTop: 15 }}>
-                        <Text style={styles.inputTitle}>Password</Text>
-                        <TextInput
-                            style={styles.input}
-                            secureTextEntry
-                            autoCapitalize="none"
-                            onChangeText={password => this.setState({ password })}
-                            value={this.state.password}
-                        ></TextInput>
+                    <View style={styles.form}>
+                        <View>
+                            <Text style={styles.inputTitle}>Email Address</Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                onChangeText={email => this.setState({ email })}
+                                value={this.state.email}
+                            ></TextInput>
+                        </View>
+
+                        <View style={{ marginTop: 15 }}>
+                            <Text style={styles.inputTitle}>Password</Text>
+                            <TextInput
+                                style={styles.input}
+                                secureTextEntry
+                                autoCapitalize="none"
+                                onChangeText={password => this.setState({ password })}
+                                value={this.state.password}
+                            ></TextInput>
+                        </View>
                     </View>
-                </View>
 
-                <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-                    <Text style={styles.signIn}>Sign in </Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
+                        <Text style={styles.signIn}>Sign in </Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={{ alignSelf: "center", marginTop: 32 }}>
-                    <Text style={{ color: "#414959", fontSize: 13 }}>
-                        New to this App?
+                    <TouchableOpacity style={{ alignSelf: "center", marginTop: 32 }}>
+                        <Text style={{ color: "#414959", fontSize: 13 }}>
+                            New to this App?
                     </Text>
 
-                    <Text
-                        style={{ alignSelf: "center", fontWeight: "500", color: "#E9446A" }}
-                        onPress={() => this.props.navigation.navigate("Register")}
-                    >Sign Up </Text>
-                </TouchableOpacity>
+                        <Text
+                            style={{ alignSelf: "center", fontWeight: "500", color: "#E9446A" }}
+                            onPress={() => this.props.navigation.navigate("Register")}
+                        >Sign Up </Text>
+                    </TouchableOpacity>
 
-            </View>
+                </KeyboardAvoidingView>
+            </ScrollView>
 
 
         )
