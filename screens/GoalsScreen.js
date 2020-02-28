@@ -82,7 +82,7 @@ export default class GoalsScreen extends React.Component {
                 <TouchableOpacity onPress={() => Fire.shared.updateCompleted(this.state.goals, this.state.completed, goalItem)}>
                     <Ionicons style={{ marginLeft: 10 }} name="ios-checkmark-circle-outline" size={28} color="#50FF03" />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => Fire.shared.deleteGoal(this.state.goals, goalItem)}>
+                <TouchableOpacity onPress={() => Fire.shared.deleteCompleted(this.state.goals, goalItem)}>
                     <Ionicons style={{ marginLeft: 25 }} name="ios-close-circle-outline" size={28} color="#F10707" />
                 </TouchableOpacity>
             </View>
@@ -100,7 +100,7 @@ export default class GoalsScreen extends React.Component {
                         </View>
                     </View>
                 </View>
-                <TouchableOpacity onPress={() => Fire.shared.deleteGoal(this.state.goals, goalItem)}>
+                <TouchableOpacity onPress={() => Fire.shared.deleteCompleted(this.state.completed, goalItem)}>
                     <Ionicons style={{ marginLeft: 25 }} name="ios-close-circle-outline" size={28} color="#F10707" />
                 </TouchableOpacity>
             </View>
