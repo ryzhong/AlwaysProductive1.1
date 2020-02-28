@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, SectionList } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, SectionList } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 const firebase = require("firebase");
 // Required for side-effects
@@ -7,6 +7,7 @@ require("firebase/firestore");
 
 import Fire from '../Fire'
 
+const screen = Dimensions.get('window')
 
 export default class HomeScreen extends React.Component {
     state = {
@@ -71,6 +72,22 @@ export default class HomeScreen extends React.Component {
     }
 
     render() {
+        if(this.state.tasks.length === 0) {
+            return (
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <Text style={styles.headerTitle}>Challenges You Accepted </Text>
+                    </View>
+    
+                    <View>
+                        <TouchableOpacity style={styles.noTasksText} onPress={ ()=> this.props.navigation.navigate('Add')}>
+                            <Text style={{fontSize: 20, textAlign: "center"}}>Please add a new challenge by touching the + tab or here</Text>
+                        </TouchableOpacity>
+                    </View>
+    
+                </View>
+            )
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
@@ -129,6 +146,16 @@ const styles = StyleSheet.create({
         marginLeft: 12,
         fontSize: 14,
         color: "#838899"
+    },
+    noTasksText: {
+        top: screen.height/4, 
+        justifyContent: "center", 
+        alignItems: "center",
+        backgroundColor: "#FFF",
+        marginHorizontal: 30,
+        borderRadius: 5,
+        padding: 8,
+        
     }
 
 })
